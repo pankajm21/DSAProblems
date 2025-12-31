@@ -1,0 +1,79 @@
+class Solution {
+    Node root = new Node();
+
+    public String completeString(List<String> lst) {
+        //your code goes here
+        for(int ind=0;ind<lst.size();ind++){
+           String str = lst.get(ind);
+           Node node = root;
+           insert(node,str);
+        }
+
+        String max="";
+        for(int ind=0;ind<lst.size();ind++){
+           String str = lst.get(ind);
+           Node node = root;
+           if(isValid(node,str)){
+                if(max.length() < str.length()){
+                    max = str;
+                }else if(max.length() == str.length() && max.compareTo(str) > 0){
+                    max = str;
+                }
+           }
+        }
+
+        if(max.isEmpty()){
+            return "None";
+        }
+        return max;
+
+    }
+
+    boolean isValid(Node node,String str){
+        for(int ind=0;ind<str.length();ind++){
+            char ch = str.charAt(ind);
+            node = node.get(ch);
+            if(!node.isEnd()){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    void insert(Node node,String str){
+        for(int ind=0;ind<str.length();ind++){
+            char ch = str.charAt(ind);
+            if(!node.contains(ch)){
+                node.add(ch);
+            }
+            node = node.get(ch);
+        }
+        node.setEnd();
+    }
+
+}
+
+class Node{
+    Node[] links = new Node[26];
+    boolean end;
+
+    boolean contains(char ch){
+        return links[ch-'a'] != null;
+    }
+
+    void add(char ch){
+        links[ch-'a'] = new Node();
+    }
+
+    Node get(char ch){
+        return links[ch-'a'];
+    }
+
+    boolean isEnd(){
+        return end;
+    }
+
+    void setEnd(){
+        end = true;
+    }
+}

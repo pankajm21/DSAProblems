@@ -1,0 +1,112 @@
+class Solution {
+    public int countDistinctSubstring(String s) {
+        //your code goes here
+
+        // write all the substrings
+        // write all the distinck substring
+        // count all the substrings
+        // count all the distinct substring
+        //return appr1(s);
+         return appr2(s);
+
+
+
+    }
+
+    int appr2(String s){
+        int n = s.length();
+
+        Node root = new Node();
+
+        // Add words
+        //int cnt = 0;
+        for(int i=0;i<n;i++){
+            Node node = root;
+            for(int j=i;j<n;j++){
+                char ch = s.charAt(j);
+                if(!node.contains(ch)){
+                    node.add(ch);
+                    //cnt++;
+                }
+                node = node.get(ch);
+            }
+        }
+
+        //return cnt+1;
+
+        Node node = root;
+
+
+
+        return tr(node)+1;
+
+    }
+
+    int tr(Node node){
+        if(node == null){
+            return 0;
+        }
+
+        int cnt = 0;
+        for(int i=0;i<26;i++){
+            if(node.links[i] != null){
+                cnt += 1+tr(node.links[i]);
+            }
+        }
+
+        return cnt;
+    }
+
+
+    int appr1(String s){
+
+        int n = s.length();
+        List<String> lst = new ArrayList<>();
+        int cnt = 0;
+        for(int i=0;i<n;i++){
+            String str = "";
+            for(int j=i;j<n;j++){
+                str += s.charAt(j);
+                lst.add(str);
+                cnt++;
+            }
+        }
+        lst.add("");
+
+        cnt++;
+        //System.out.println("all substrings "+lst+" substring cnt "+cnt);
+
+        HashSet<String> hs = new HashSet<>();
+        for(int i=0;i<n;i++){
+            String str = "";
+            for(int j=i;j<n;j++){
+                str += s.charAt(j);
+                hs.add(str);
+            }
+        }
+
+        hs.add("");
+        cnt = hs.size();
+
+      //  System.out.println("all distinct substrings "+hs+" distinct substring cnt "+cnt);
+
+        return cnt;
+
+    }
+}
+
+class Node{
+    Node[] links = new Node[26];
+
+    boolean contains(char ch){
+       return links[ch-'a'] != null;
+    }
+
+    void add(char ch){
+        links[ch-'a'] = new Node();
+    }
+
+    Node get(char ch){
+        return links[ch-'a'];
+    }
+}
