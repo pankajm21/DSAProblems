@@ -1,0 +1,78 @@
+class Solution {
+    public int latestDayToCross(int n, int m, int[][] cell) {
+        int[][] mat = new int[n][m];
+
+        int l =0;
+        int r = cell.length-1;
+
+        int res = 0;
+        while(l <= r){
+            int mid = (l+r)/2;
+
+            mat = new int[n][m];
+            for(int ind=0;ind<=mid;ind++){
+            // for(int ind1=0;ind1<cell[0].length;ind1++){
+                    mat[cell[ind][0]-1][cell[ind][1]-1] = 1;
+
+            }
+
+            if(isValid(mat,n,m)){
+                l = mid+1;
+                res = l;
+            }else{
+                r = mid-1;
+            }
+
+        }
+
+        return res;
+
+
+
+   //     return cell.length;
+    }
+
+    boolean isValid(int[][] mat,int n,int m){
+
+        Queue<Pair> qu = new LinkedList<>();
+        boolean[][] visitArr = new boolean[n][m];
+        for(int j=0;j<m;j++){
+            if(mat[0][j] == 0){
+                qu.add(new Pair(0,j));
+                visitArr[0][j]=true;
+            }
+        }
+
+
+        while(!qu.isEmpty()){
+            Pair pair = qu.remove();
+            if(pair.r == n-1){
+                return true;
+            }
+            int[][] dir = {{0,1},{0,-1},{1,0},{-1,0}};
+
+            for(int ind=0;ind<dir.length;ind++){
+                int newr = pair.r + dir[ind][0];
+                int newc = pair.c + dir[ind][1];
+
+                if(newr >= 0 && newr < n && newc >= 0 && newc < m && mat[newr][newc] == 0 && !visitArr[newr][newc]){
+                    qu.add(new Pair(newr,newc));
+                    visitArr[newr][newc]=true;
+                }
+            }
+        }
+
+        return false;
+
+    }
+}
+
+class Pair{
+    int r;
+    int c;
+
+    Pair(int r,int c){
+        this.r = r;
+        this.c = c;
+    }
+}

@@ -1,0 +1,56 @@
+class Solution {
+    public int numMagicSquaresInside(int[][] mat) {
+        int n = mat.length;
+        int m = mat[0].length;
+
+        if(n<3 || m<3){
+            return 0;
+        }
+
+        int cnt = 0;
+        for(int ind=0;ind<n-2;ind++){
+            for(int ind1=0;ind1<m-2;ind1++){
+
+
+                if(mat[ind][ind1] >= 1 && mat[ind][ind1] <= 9
+                && mat[ind][ind1+1] >= 1 && mat[ind][ind1+1] <= 9
+                && mat[ind][ind1+2] >= 1 && mat[ind][ind1+2] <= 9
+                && mat[ind+1][ind1] >= 1 && mat[ind+1][ind1] <= 9
+                && mat[ind+1][ind1+1] >= 1 && mat[ind+1][ind1+1] <= 9
+                && mat[ind+1][ind1+2] >= 1 && mat[ind+1][ind1+2] <= 9
+                && mat[ind+2][ind1] >= 1 && mat[ind+2][ind1] <= 9
+                && mat[ind+2][ind1+1] >= 1 && mat[ind+2][ind1+1] <= 9
+                && mat[ind+2][ind1+2] >= 1 && mat[ind+2][ind1+2] <= 9
+                ){
+
+                }else{
+                    System.out.println("from 1 to 9 ind "+ind+" ind1 "+ind1);
+                    continue;
+                }
+
+                HashSet<Integer> hs = new HashSet<>();
+                if(!hs.add(mat[ind][ind1]) || !hs.add(mat[ind][ind1+1]) || !hs.add(mat[ind][ind1+2])
+                || !hs.add(mat[ind+1][ind1]) || !hs.add(mat[ind+1][ind1+1]) || !hs.add(mat[ind+1][ind1+2])
+                || !hs.add(mat[ind+2][ind1]) || !hs.add(mat[ind+2][ind1+1]) || !hs.add(mat[ind+2][ind1+2])){
+                   System.out.println("distinct ind "+ind+" ind1 "+ind1);
+                    continue;
+                }
+
+                int sum = mat[ind][ind1] + mat[ind][ind1+1] + mat[ind][ind1+2];
+
+                if(sum == (mat[ind+1][ind1] + mat[ind+1][ind1+1] + mat[ind+1][ind1+2]) && sum == (mat[ind+2][ind1] + mat[ind+2][ind1+1] + mat[ind+2][ind1+2])
+                && sum == (mat[ind][ind1] + mat[ind+1][ind1] + mat[ind+2][ind1]) && sum == (mat[ind][ind1+1] + mat[ind+1][ind1+1] + mat[ind+2][ind1+1]) && sum == (mat[ind][ind1+2] + mat[ind+1][ind1+2] + mat[ind+2][ind1+2])
+                && sum == (mat[ind][ind1]+mat[ind+1][ind1+1]+mat[ind+2][ind1+2])
+                && sum == (mat[ind+2][ind1]+mat[ind+1][ind1+1]+mat[ind][ind1+2])
+                ){
+                   cnt++;
+                }else{
+                    System.out.println("sum ind "+ind+" ind1 "+ind1+" sum "+sum);
+                }
+
+            }
+        }
+
+        return cnt;
+    }
+}
