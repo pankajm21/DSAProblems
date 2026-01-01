@@ -1,0 +1,82 @@
+class Solution {
+    public int findMaximumXOR(int[] arr) {
+        //your code goes here
+        int n = arr.length;
+        Node root = new Node();
+
+        for(int ele: arr){
+            Node node = root;
+            insert(node,ele);
+        }
+
+        int max = 0;
+        for(int ele: arr){
+            Node node = root;
+            max = Math.max(max,getMax(node,ele));
+        }
+        return max;
+
+
+    }
+
+    int getMax(Node node,int x){
+        int res = 0;
+        for(int ind=31;ind>=0;ind--){
+            int bit = 0;
+            if((1<<ind & x) > 0){
+                bit = 1;
+            }
+
+            int toggle = 1-bit;
+
+            if(node.contains(toggle)){
+                node = node.get(toggle);
+                res = res | (1<<ind);
+            }else{
+                node = node.get(bit);
+
+            }
+
+
+
+        }
+
+
+           // System.out.println("x "+x+" res "+res);
+        return res;
+    }
+
+    void insert(Node node,int x){
+
+        for(int ind=31;ind>=0;ind--){
+            int bit = 0;
+            if((x & 1<<ind) > 0){
+                bit = 1;
+            }
+
+            if(!node.contains(bit)){
+                node.add(bit);
+            }
+            node = node.get(bit);
+
+        }
+
+    }
+
+}
+
+class Node{
+    Node[] links = new Node[2];
+
+    boolean contains(int bit){
+       return links[bit] != null;
+    }
+
+    void add(int bit){
+        links[bit] = new Node();
+    }
+
+    Node get(int bit){
+        return links[bit];
+    }
+}

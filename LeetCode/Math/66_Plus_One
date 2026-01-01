@@ -1,0 +1,17 @@
+class Solution {
+    public int[] plusOne(int[] arr) {
+        int n = arr.length;
+        List<Integer> lst = new ArrayList<>();
+        int carry = 1;
+        for(int ind=n-1;ind>=0;ind--){
+            int sum = arr[ind]+carry;
+            lst.add(sum%10);
+            carry = sum/10;
+        }
+        if(carry == 1){
+            lst.add(1);
+        }
+        Collections.reverse(lst);
+        return lst.stream().mapToInt(Integer::intValue).toArray();
+    }
+}
