@@ -1,0 +1,118 @@
+class Solution {
+    public List<Integer> maximizeXor(int[] arr, int[][] qu) {
+        //your code goes here
+        int n = arr.length;
+        Arrays.sort(arr);
+
+        Pair[] pArr = new Pair[qu.length];
+
+        for(int ind=0;ind<qu.length;ind++){
+            pArr[ind] = new Pair(qu[ind][0],qu[ind][1],ind);
+        }
+
+      //  System.out.println("pArr "+Arrays.toString(pArr));
+        Arrays.sort(pArr);
+
+
+        Node root = new Node();
+
+        int[] res = new int[qu.length];
+
+        int pos = 0;
+        for(Pair ele: pArr){
+            int x = ele.x;
+            while(pos < n && arr[pos] <= ele.m){
+                Node node = root;
+                insert(node,arr[pos]);
+                pos++;
+            }
+            if(pos > 0){
+                Node node = root;
+                int max = getMax(node,x);
+                res[ele.p] = max;
+            }else{
+                res[ele.p] = -1;
+            }
+        }
+
+         List<Integer> lst = new ArrayList<>();
+         for(int ele: res){
+            lst.add(ele);
+         }
+//        return Arrays.stream(res).boxed().collect(Collectors.toList());
+
+        return lst;
+    }
+
+    int getMax(Node node,int x){
+        int res = 0;
+        for(int ind=31;ind>=0;ind--){
+            int bit = 0;
+            if((x & 1<<ind) > 0){
+                bit = 1;
+            }
+            int toggle = 1 - bit;
+            if(node.contains(toggle)){
+                node = node.get(toggle);
+                res = res | (1<<ind);
+            }else{
+                node = node.get(bit);
+            }
+        }
+
+        return res;
+    }
+
+    void insert(Node node,int x){
+        for(int ind=31;ind>=0;ind--){
+            int bit = 0;
+            if((x & 1<<ind) > 0){
+                bit = 1;
+            }
+            if(!node.contains(bit)){
+                node.add(bit);
+            }
+            node = node.get(bit);
+        }
+    }
+}
+
+
+
+class Node{
+    Node[] links = new Node[2];
+
+    boolean contains(int bit){
+        return links[bit] != null;
+    }
+
+    void add(int bit){
+        links[bit] = new Node();
+    }
+
+    Node get(int bit){
+        return links[bit];
+    }
+}
+
+class Pair implements Comparable<Pair>{
+    int x;
+    int m;
+    int p;
+
+    Pair(int x,int m,int p){
+        this.x = x;
+        this.m = m;
+        this.p = p;
+    }
+
+    public int compareTo(Pair pair){
+        return this.m - pair.m;
+    }
+
+    public String toString(){
+        return " x : "+x+" m : "+m+" p : "+p;
+    }
+
+
+}
