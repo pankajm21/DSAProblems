@@ -1,0 +1,87 @@
+class Solution {
+    public int climbStairs(int n) {
+
+        /*int[] memo = new int[n+1];
+        Arrays.fill(memo,-1);
+        return tr(0,n,memo);*/
+
+       // return tr1(0,n);
+`
+        return tr2(0,n);
+
+    }
+
+    int tr(int pos,int n,int[] memo){
+        if(pos == n){
+            return 1;
+        }
+
+        if(memo[pos] != -1){
+            return memo[pos];
+        }
+
+        int cnt = tr(pos+1,n,memo);
+
+        if(pos+2 <= n){
+            cnt+= tr(pos+2,n,memo);
+        }
+
+        memo[pos] = cnt;
+        return memo[pos];
+
+    }
+
+    int tr1(int ind,int n){
+        int[] dp = new int[n+1];
+
+        dp[n] = 1;
+        /*if(pos == n){
+            return 1;
+        }*/
+
+        for(int pos=n-1;pos>=0;pos--){
+
+            int cnt = dp[pos+1];
+
+            if(pos+2 <= n){
+                cnt+= dp[pos+2];
+            }
+
+            dp[pos] = cnt;
+
+        }
+
+        return dp[ind];
+
+    }
+
+    int tr2(int ind,int n){
+        //int[] dp = new int[n+1];
+        int curr = 0;
+        int next1 = 0;
+        int next2 = 0;
+
+        next1 = 1;
+        /*if(pos == n){
+            return 1;
+        }*/
+
+        for(int pos=n-1;pos>=0;pos--){
+
+            int cnt = next1;
+
+            if(pos+2 <= n){
+                cnt+= next2;
+            }
+
+            curr = cnt;
+
+            next2 = next1;
+            next1 = curr;
+
+        }
+
+        return curr;
+
+    }
+}

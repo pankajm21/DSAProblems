@@ -1,0 +1,78 @@
+class Solution {
+    public int frogJump(int[] arr, int k) {
+        int n = arr.length;
+
+       /* int[] memo = new int[n];
+        Arrays.fill(memo,-1);
+        return tr(arr,0,n,k,memo); */
+
+        return tr1(arr,0,n,k);
+
+    }
+
+    int tr(int[] arr,int pos,int n,int k,int[] memo){
+
+        if(pos == n-1){
+            return 0;
+        }
+
+        if(memo[pos] != -1){
+            return memo[pos];
+        }
+
+        int min = Integer.MAX_VALUE;
+        for(int step=1; step<=k && pos+step<n ; step++){
+            min = Math.min(min, Math.abs(arr[pos]-arr[pos+step]) + tr(arr,pos+step,n,k,memo));
+        }
+
+        memo[pos] = min;
+        return memo[pos];
+    }
+
+
+    int tr1(int[] arr,int ind,int n,int k){
+
+        int[] dp = new int[n];
+
+        dp[n-1]=0;
+       /* if(pos == n-1){
+            return 0;
+        }*/
+
+        for(int pos=n-2;pos>=0;pos--){
+
+            int min = Integer.MAX_VALUE;
+            for(int step=1; step<=k && pos+step<n ; step++){
+                min = Math.min(min, Math.abs(arr[pos]-arr[pos+step]) + dp[pos+step]);
+            }
+
+            dp[pos] = min;
+
+        }
+
+        return dp[ind];
+    }
+
+    int tr2(int[] arr,int ind,int n,int k){
+
+        int[] dp = new int[n];
+
+        dp[n-1]=0;
+       /* if(pos == n-1){
+            return 0;
+        }*/
+
+        for(int pos=n-2;pos>=0;pos--){
+
+            int min = Integer.MAX_VALUE;
+            for(int step=1; step<=k && pos+step<n ; step++){
+                min = Math.min(min, Math.abs(arr[pos]-arr[pos+step]) + dp[pos+step]);
+            }
+
+            dp[pos] = min;
+
+        }
+
+        return dp[ind];
+    }
+}
