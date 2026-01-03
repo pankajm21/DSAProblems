@@ -1,0 +1,21 @@
+class Solution {
+    public int numOfWays(int n) {
+        // To strore p1 -> all colors are diff
+        long[] p1 = new long[n];
+        // To store p2 -> top and bottom are same
+        long[] p2 = new long[n];
+
+        p1[0]=6;
+        p2[0]=6;
+
+        for(int ind=1;ind<n;ind++){
+            // calculating for p1 when prev state is p1-2ways and p2-2ways
+            p1[ind] = (p1[ind-1]*2 + p2[ind-1]*2)%1000000007;
+            // calculating for p2 when prev state is p1-2ways and p2-3ways
+            p2[ind] = (p1[ind-1]*2 + p2[ind-1]*3)%1000000007;
+        }
+
+        return (int)(p1[n-1]+p2[n-1])%1000000007;
+
+    }
+}

@@ -1,0 +1,95 @@
+class Solution {
+    public int nonAdjacent(int[] arr) {
+        int n = arr.length;
+
+       /* int[] memo = new int[n];
+        Arrays.fill(memo,-1);
+        return tr(arr,0,n,memo);  */
+
+       // return tr1(arr,n);
+        return tr2(arr,n);
+
+    }
+
+    int tr(int[] arr,int pos,int n,int[] memo){
+        if(pos == n){
+            return 0;
+        }
+
+        if(memo[pos] != -1){
+            return memo[pos];
+        }
+
+        // not take
+        int max = tr(arr,pos+1,n,memo);
+
+        // take
+        int sum = arr[pos];
+        if(pos+2 < n){
+            sum += tr(arr,pos+2,n,memo);
+        }
+
+        max = Math.max(max,sum);
+
+        memo[pos] = max;
+        return memo[pos];
+    }
+
+    int tr1(int[] arr,int n){
+        int[] dp = new int[n+1];
+
+        dp[n] = 0;
+        /*if(pos == n){
+            return 0;
+        }*/
+
+
+        for(int pos=n-1;pos>=0;pos--){
+            // not take
+            int max = dp[pos+1];
+
+            // take
+            int sum = arr[pos];
+            if(pos+2 < n){
+                sum += dp[pos+2];
+            }
+
+            max = Math.max(max,sum);
+
+            dp[pos] = max;
+        }
+
+        return dp[0];
+    }
+
+    int tr2(int[] arr,int n){
+
+
+        //int[] dp = new int[n+1];
+        int curr=0,next1=0,next2 = 0;
+
+
+
+        //dp[n] = 0;
+        next1 = 0;
+
+        for(int pos=n-1;pos>=0;pos--){
+            // not take
+            int max = next1;
+
+            // take
+            int sum = arr[pos];
+            if(pos+2 < n){
+                sum += next2;
+            }
+
+            max = Math.max(max,sum);
+
+            curr = max;
+            next2 = next1;
+            next1 = curr;
+        }
+
+        return curr;
+    }
+}
