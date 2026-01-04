@@ -1,0 +1,50 @@
+class Solution {
+    public int sumFourDivisors(int[] arr) {
+        int n = arr.length;
+
+        int res = 0;
+        HashMap<Integer,Integer> hm = new HashMap<>();
+        for(int ind=0;ind<n;ind++){
+            if(hm.containsKey(arr[ind])){
+                int val = hm.get(arr[ind]);
+                if(val != -1){
+                    res += val;
+                }
+                continue;
+            }
+            int sum = findDiv(arr[ind]);
+
+            if(sum != -1){
+                hm.put(arr[ind],sum);
+                res += sum;
+            }else{
+                hm.put(arr[ind],-1);
+            }
+
+        }
+
+        return res;
+    }
+
+    int findDiv(int ele){
+        int sum = 1+ele;
+        int cnt = 2;
+        for(int ind=2;ind<ele;ind++){
+            if(ele%ind == 0){
+                sum+=ind;
+                cnt++;
+                if(cnt > 4){
+                    return -1;
+                }
+            }
+        }
+        System.out.println("ele "+ele+" cnt "+cnt);
+        if(cnt == 4){
+            return sum;
+        }else{
+            return -1;
+        }
+    }
+
+
+}

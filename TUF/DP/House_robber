@@ -1,0 +1,120 @@
+class Solution {
+    public int houseRobber(int[] arr) {
+        int n = arr.length;
+
+        if(n == 0){
+            return 0;
+        }
+
+        if(n == 1){
+            return arr[0];
+        }
+
+      /*  long[] memo = new long[n];
+        Arrays.fill(memo,-1);
+        long res1 = tr(arr,1,n-1,memo);
+
+        Arrays.fill(memo,-1);
+        long res2 = tr(arr,0,n-2,memo);
+
+        return (int)Math.max(res1,res2);    */
+
+
+       /* int res1 = tr1(arr,1,n-1);
+        int res2 = tr1(arr,0,n-2);
+
+        return Math.max(res1,res2);*/
+
+        int res1 = tr2(arr,1,n-1);
+        int res2 = tr2(arr,0,n-2);
+
+       // System.out.println("res1 "+res1+" res2 "+res2);
+
+        return Math.max(res1,res2);
+
+    }
+
+    long tr(int[] arr,int pos,int end,long[] memo){
+        if(pos == end){
+            return arr[pos];
+        }
+        if(pos > end){
+            return 0;
+        }
+        if(pos<0){
+            return 0;
+        }
+
+        if(memo[pos] != -1){
+            return memo[pos];
+        }
+
+        // no take
+        long max = tr(arr,pos+1,end,memo);
+        //take
+        max = Math.max(max,arr[pos] + tr(arr,pos+2,end,memo));
+
+        memo[pos] = max;
+
+        return memo[pos];
+    }
+
+    int tr1(int[] arr,int start,int end){
+
+
+        int[] dp = new int[arr.length+1];
+        dp[end] = arr[end];
+        /*if(pos == end){
+            return arr[pos];
+        }*/
+        /*if(pos > end){
+            return 0;
+        }*/
+
+
+        for(int pos=end-1;pos>=start;pos--){
+            // no take
+            int max = dp[pos+1];
+            //take
+            max = Math.max(max,arr[pos] + dp[pos+2]);
+
+            dp[pos] = max;
+        }
+
+        return dp[start];
+    }
+
+    int tr2(int[] arr,int start,int end){
+        //int[] dp = new int[arr.length+1];
+        int curr = 0;
+        int next1 = 0;
+        int next2 = 0;
+
+        next1 = arr[end];
+
+       // System.out.println("start "+start+" end "+end+" next1 "+next1);
+      //  dp[end] = arr[end];
+        /*if(pos == end){
+            return arr[pos];
+        }*/
+        /*if(pos > end){
+            return 0;
+        }*/
+
+
+        for(int pos=end-1;pos>=start;pos--){
+            // no take
+            int max = next1;
+            //take
+            max = Math.max(max,arr[pos] + next2);
+
+            curr = max;
+            next2 = next1;
+            next1 = curr;
+        }
+
+
+        return next1;
+    }
+
+}

@@ -1,0 +1,106 @@
+class Solution {
+    public int ninjaTraining(int[][] mat) {
+        int n = mat.length;
+
+
+
+        int max = 0;
+      /*  int[][] memo = new int[n][4];
+        //for(int j=0;j<3;j++){
+            for(int ind=0;ind<n;ind++){
+                for(int ind1=0;ind1<=3;ind1++){
+                    memo[ind][ind1] = -1;
+                }
+            }
+            max = tr(mat,0,3,n,memo);
+        //}
+        */
+
+        //for(int j=0;j<3;j++){
+      //  max = tr1(mat,0,3,n);
+        //}
+
+        max = tr2(mat,0,n);
+        return max;
+
+    }
+
+    int tr(int[][] mat,int r,int c,int n,int[][] memo){
+        if(r == n){
+            return 0;
+        }
+
+        if(memo[r][c] != -1){
+            return memo[r][c];
+        }
+
+        int max = 0;
+        for(int j=0;j<3;j++){
+            if(j != c){
+               max = Math.max(max,mat[r][j] +tr(mat,r+1,j,n,memo));
+            }
+        }
+
+        memo[r][c] = max;
+        return max;
+    }
+
+    int tr1(int[][] mat,int row,int col,int n){
+
+        int[][] dp = new int[n+1][4];
+
+
+        for(int r=n-1;r>=row;r--){
+            for(int c=2;c>=0;c--){
+
+                int max = 0;
+                for(int j=0;j<3;j++){
+                    if(j != c){
+                        max = Math.max(max,mat[r][j] + dp[r+1][j]);
+                    }
+                }
+
+                dp[r][c] = max;
+            }
+        }
+
+        int max = 0;
+        for(int j=0;j<3;j++){
+            max = Math.max(max,dp[0][j]);
+        }
+        return max;
+    }
+
+    int tr2(int[][] mat,int row,int n){
+
+        int[] curr = new int[3];
+        int[] next = new int[3];
+
+        //int[][] dp = new int[n+1][4];
+
+
+        for(int r=n-1;r>=row;r--){
+            for(int c=2;c>=0;c--){
+
+                int max = 0;
+                for(int j=0;j<3;j++){
+                    if(j != c){
+                        max = Math.max(max,mat[r][j] + next[j]);
+                    }
+                }
+
+                curr[c] = max;
+            }
+
+            for(int j=0;j<3;j++){
+                next[j] = curr[j];
+            }
+        }
+
+        int max = 0;
+        for(int j=0;j<3;j++){
+            max = Math.max(max,next[j]);
+        }
+        return max;
+    }
+}
