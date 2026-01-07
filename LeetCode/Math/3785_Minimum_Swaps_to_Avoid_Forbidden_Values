@@ -1,0 +1,48 @@
+class Solution {
+
+    public int minSwaps(int[] arr, int[] farr) {
+        int n = arr.length;
+        HashMap<Integer,Integer> hm = new HashMap<>();
+
+        for(int ele: arr){
+            hm.put(ele,hm.getOrDefault(ele,0)+1);
+        }
+
+        for(int ele: farr){
+            hm.put(ele,hm.getOrDefault(ele,0)+1);
+        }
+
+        // fessiblity check
+        for(Map.Entry<Integer,Integer> entry: hm.entrySet()){
+            if(entry.getValue() > n){
+                return -1;
+            }
+        }
+
+        int same = 0;
+        HashMap<Integer,Integer> smap = new HashMap<>();
+
+        int maxSame = 0;
+        for(int i=0;i<n;i++){
+            if(arr[i] == farr[i]){
+                same++;
+                smap.put(arr[i],smap.getOrDefault(arr[i],0)+1);
+                maxSame = Math.max(maxSame,smap.get(arr[i]));
+            }
+        }
+
+        System.out.println("same "+same+" smap "+smap);
+
+
+
+        int swapcnt = (same+1)/2;
+
+
+        if(maxSame > swapcnt){
+            return maxSame;
+        }else{
+            return swapcnt;
+        }
+
+    }
+}

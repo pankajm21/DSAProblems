@@ -1,0 +1,96 @@
+class Solution {
+    public int minTriangleSum(int[][] mat) {
+        int n = mat.length;
+
+        int[][] memo = new int[n][n];
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                memo[i][j] = -1;
+            }
+        }
+
+        return  tr(mat,0,0,n,n,memo);
+
+       // return tr1(mat,n);
+
+//        return tr2(mat,n);
+    }
+
+    int tr(int[][] mat,int r,int c,int n,int m,int[][] memo){
+        if(r==n-1){
+            return mat[r][c];
+        }
+
+        if(memo[r][c] != -1){
+            return memo[r][c];
+        }
+
+
+        int min = mat[r][c] + tr(mat,r+1,c,n,m+1,memo);
+
+        if(c+1 <= m){
+            min = Math.min(min,mat[r][c] + tr(mat,r+1,c+1,n,m+1,memo));
+        }
+
+        memo[r][c] = min;
+        return memo[r][c];
+
+    }
+
+    int tr1(int[][] mat,int n){
+
+        int[][] dp = new int[n][n];
+
+        for(int j=0;j<n;j++){
+            dp[n-1][j] = mat[n-1][j];
+        }
+
+       /* if(r==n-1){
+            return mat[r][c];
+        }  */
+
+        for(int r=n-2;r>=0;r--){
+            for(int c=r;c>=0;c--){
+
+                int min = mat[r][c] + dp[r+1][c];
+
+
+                min = Math.min(min, mat[r][c] + dp[r+1][c+1]);
+
+                dp[r][c] = min;
+
+            }
+        }
+
+        return dp[0][0];
+
+    }
+
+    int tr2(int[][] mat,int n){
+
+        int[] curr = new int[n];
+        int[] prev = new int[n];
+
+        for(int j=0;j<n;j++){
+            prev[j] = mat[n-1][j];
+        }
+
+        for(int r=n-2;r>=0;r--){
+            for(int c=r;c>=0;c--){
+
+                int min = mat[r][c] + prev[c];
+                min = Math.min(min, mat[r][c] + prev[c+1]);
+
+                curr[c] = min;
+
+            }
+            prev = curr;
+            curr = new int[n];
+        }
+
+        return prev[0];
+
+    }
+
+
+}
