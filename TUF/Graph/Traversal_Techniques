@@ -1,0 +1,54 @@
+class Solution {
+    public List<Integer> dfsOfGraph(int V, List<List<Integer>> adj) {
+
+        List<Integer> lst = new ArrayList<>();
+        boolean[] visitArr = new boolean[V];
+
+        visitArr[0]=true;
+        tr(adj,0,lst,visitArr);
+        return lst;
+    }
+
+    void tr(List<List<Integer>> adj,int u,List<Integer> lst,boolean[] visitArr){
+
+        lst.add(u);
+
+        for(Integer v: adj.get(u)){
+            if(!visitArr[v]){
+                visitArr[v]=true;
+                tr(adj,v,lst,visitArr);
+            }
+        }
+
+    }
+
+    public List<Integer> bfsOfGraph(int V, List<List<Integer>> adj) {
+
+        List<Integer> lst = new ArrayList<>();
+
+        Queue<Integer> qu = new LinkedList<>();
+        int u = 0;
+        qu.add(u);
+
+
+        boolean[] visitArr = new boolean[V];
+
+        visitArr[u]=true;
+
+
+        visitArr[0]=true;
+        while(!qu.isEmpty()){
+            u = qu.remove();
+            lst.add(u);
+            for(int v: adj.get(u)){
+                if(!visitArr[v]){
+                    qu.add(v);
+                    visitArr[v]=true;
+                }
+            }
+        }
+
+        return lst;
+    }
+}
+

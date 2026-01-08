@@ -1,0 +1,42 @@
+class Solution {
+    public int maxBalancedSubarray(int[] arr) {
+        int n = arr.length;
+
+        HashMap<String,Integer> hm = new HashMap<>();
+        int bal = 0;
+        int xor = 0;
+
+        hm.put("0|0",-1);
+        int max = 0;
+        for(int ind=0;ind<n;ind++){
+
+            if(arr[ind]%2 != 0){
+                bal++;
+            }else{
+                bal--;
+            }
+
+            xor = xor^arr[ind];
+
+            int diffb = bal;
+
+            String key = xor+"|"+bal;
+
+
+
+            String diffkey = xor+"|"+diffb;
+
+           // System.out.println("hm "+hm+" diffkey "+diffkey+" key "+key);
+            if(hm.containsKey(diffkey)){
+                max = Math.max(max,ind-hm.get(diffkey));
+            }
+
+            if(!hm.containsKey(key)){
+                hm.put(key,ind);
+            }
+        }
+
+        return max;
+
+    }
+}
