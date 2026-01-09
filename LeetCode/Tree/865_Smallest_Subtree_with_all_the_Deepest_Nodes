@@ -1,0 +1,112 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public TreeNode subtreeWithAllDeepest(TreeNode root) {
+
+        TreeNode node = root;
+        // find height
+        Map<Integer,Integer> hm = new HashMap<>();
+        int h = findH(node,hm,1);
+
+        int cnt = hm.get(h);
+        System.out.println("h "+h+" cnt "+cnt+" hm "+hm);
+
+        node = root;
+        Pair pair = tr(node,h,cnt,1);
+        //if(pair != null && pair.valid == true){
+            return pair.ele;
+        //}
+        //return root;
+    }
+
+    Pair tr(TreeNode node,int h,int cnt,int d){
+        if(node == null){
+            return null;
+        }
+
+        if(node.left == null && node.right == null){
+            boolean valid = false;
+            int leafcnt = 0;
+            if(d == h){
+                leafcnt = 1;
+                if(cnt == leafcnt){
+                    valid = true;
+                }
+            }
+            return new Pair(node,leafcnt,valid);
+        }
+
+        Pair left = tr(node.left,h,cnt,d+1);
+        if(left!= null && left.valid){
+            return left;
+        }
+        Pair right = tr(node.right,h,cnt,d+1);
+        if(right != null && right.valid){
+            return right;
+        }
+
+
+        int leafcnt = 0;
+        if(left != null){
+            leafcnt += left.cnt;
+
+        }
+
+        if(right != null){
+            leafcnt += right.cnt;
+        }
+
+        boolean valid = false;
+        if(leafcnt == cnt){
+            valid = true;
+        }
+
+        return new Pair(node,leafcnt,valid);
+
+    }
+
+
+
+    int findH(TreeNode node,Map<Integer,Integer> hm,int d){
+        if(node == null){
+            return 0;
+        }
+
+        if(node.left == null && node.right == null){
+            hm.put(d,hm.getOrDefault(d,0)+1);
+        }
+
+        int left = findH(node.left,hm,d+1);
+        int right = findH(node.right,hm,d+1);
+        int res = Math.max(left,right)+1;
+
+
+
+        return res;
+    }
+}
+
+class Pair{
+    TreeNode ele;
+    int cnt;
+    boolean valid;
+
+    Pair(TreeNode ele,int cnt,boolean valid){
+        this.ele = ele;
+        this.cnt = cnt;
+        this.valid = valid;
+    }
+}

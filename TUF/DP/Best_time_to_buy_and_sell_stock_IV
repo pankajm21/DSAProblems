@@ -1,0 +1,134 @@
+class Solution {
+    public int stockBuySell(int[] arr, int n, int k) {
+
+        /*int[][][] memo = new int[n][2][k+1];
+        for(int i=0;i<n;i++){
+            for(int j=0;j<2;j++){
+                for(int l=0;l<=k;l++){
+                    memo[i][j][l]=-1;
+                }
+            }
+        }
+        return tr(arr,0,n,0,k,memo);*/
+
+    //    return tr1(arr,n,k);
+
+        return tr2(arr,n,k);
+    }
+
+    int tr(int[] arr,int pos,int n,int buy,int k,int[][][] memo){
+        if(k == 0){
+            return 0;
+        }
+
+        if(pos == n){
+            return 0;
+        }
+
+        if(memo[pos][buy][k] != -1){
+            return memo[pos][buy][k];
+        }
+
+        int res = 0;
+        if(buy == 0){
+            // can buy
+            int p1 =tr(arr,pos+1,n,buy,k,memo);
+
+            int p2 = -arr[pos] + tr(arr,pos+1,n,1,k,memo);
+            res = Math.max(p1,p2);
+        }else{
+            // can sell
+            int p1 = tr(arr,pos+1,n,buy,k,memo);
+
+            int p2 = arr[pos] + tr(arr,pos+1,n,0,k-1,memo);
+
+            res = Math.max(p1,p2);
+        }
+
+        memo[pos][buy][k]=res;
+        return res;
+    }
+
+    int tr1(int[] arr,int n,int trx){
+
+        int[][][] dp = new int[n+1][2][trx+1];
+
+        /*if(k == 0){
+            return 0;
+        }*/
+
+        /*if(pos == n){
+            return 0;
+        }*/
+
+        for(int pos=n-1;pos>=0;pos--){
+            for(int buy=1;buy>=0;buy--){
+                for(int k=trx;k>0;k--){
+
+                    int res = 0;
+                    if(buy == 0){
+                        // can buy
+                        int p1 =dp[pos+1][buy][k];
+
+                        int p2 = -arr[pos] + dp[pos+1][1][k];
+                        res = Math.max(p1,p2);
+                    }else{
+                        // can sell
+                        int p1 = dp[pos+1][buy][k];
+
+                        int p2 = arr[pos] + dp[pos+1][0][k-1];
+
+                        res = Math.max(p1,p2);
+                    }
+
+                    dp[pos][buy][k]=res;
+
+
+                }
+            }
+        }
+        return dp[0][0][trx];
+    }
+
+    int tr2(int[] arr,int n,int trx){
+
+       // int[][][] dp = new int[n+1][2][3];
+
+        int[][] prev = new int[2][trx+1];
+        int[][] curr = new int[2][trx+1];
+
+
+        for(int pos=n-1;pos>=0;pos--){
+            for(int buy=1;buy>=0;buy--){
+                for(int k=trx;k>0;k--){
+
+                    int res = 0;
+                    if(buy == 0){
+                        // can buy
+                        int p1 =prev[buy][k];
+
+                        int p2 = -arr[pos] + prev[1][k];
+                        res = Math.max(p1,p2);
+                    }else{
+                        // can sell
+                        int p1 = prev[buy][k];
+
+                        int p2 = arr[pos] + prev[0][k-1];
+
+                        res = Math.max(p1,p2);
+                    }
+
+                    curr[buy][k]=res;
+
+
+                }
+
+            }
+            prev = curr;
+            curr = new int[2][trx+1];
+        }
+        return prev[0][trx];
+    }
+
+}
+
