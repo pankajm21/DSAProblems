@@ -1,0 +1,82 @@
+class Solution {
+    public int stockBuySell(int[] arr, int n, int fee) {
+
+     /*   int[][] memo = new int[n][2];
+        for(int i=0;i<n;i++){
+            for(int j=0;j<2;j++){
+                memo[i][j]=-1;
+            }
+        }
+        return tr(arr,0,n,0,fee,memo);  */
+
+        //return tr1(arr,n,fee);
+
+        return tr2(arr,n,fee);
+
+    }
+
+    int tr(int[] arr,int pos,int n,int buy,int fee,int[][] memo){
+        if(pos == n){
+            return 0;
+        }
+
+        if(memo[pos][buy] != -1){
+            return memo[pos][buy];
+        }
+
+        int max = tr(arr,pos+1,n,buy,fee,memo);
+        if(buy == 0){
+            max = Math.max(max,-arr[pos] +tr(arr,pos+1,n,1,fee,memo));
+        }else{
+            max = Math.max(max,-fee + arr[pos] + tr(arr,pos+1,n,0,fee,memo));
+        }
+        memo[pos][buy] = max;
+        return max;
+    }
+
+    int tr1(int[] arr,int n,int fee){
+        int[][] dp = new int[n+1][2];
+        /*if(pos == n){
+            return 0;
+        }*/
+
+        for(int pos=n-1;pos>=0;pos--){
+            for(int buy=1;buy>=0;buy--){
+
+                int max = dp[pos+1][buy];
+                if(buy == 0){
+                    max = Math.max(max,-arr[pos] +dp[pos+1][1]);
+                }else{
+                    max = Math.max(max,-fee + arr[pos] + dp[pos+1][0]);
+                }
+                dp[pos][buy] = max;
+            }
+        }
+
+        return dp[0][0];
+    }
+
+    int tr2(int[] arr,int n,int fee){
+        //int[][] dp = new int[n+1][2];
+
+        int[] prev = new int[2];
+        int[] curr = new int[2];
+
+        for(int pos=n-1;pos>=0;pos--){
+            for(int buy=1;buy>=0;buy--){
+
+                int max = prev[buy];
+                if(buy == 0){
+                    max = Math.max(max,-arr[pos] +prev[1]);
+                }else{
+                    max = Math.max(max,-fee + arr[pos] + prev[0]);
+                }
+                curr[buy] = max;
+            }
+            prev = curr;
+            curr = new int[2];
+        }
+
+        return prev[0];
+    }
+}

@@ -1,0 +1,81 @@
+class Solution {
+    public int maximalRectangle(char[][] mat) {
+        int n = mat.length;
+        int m = mat[0].length;
+
+        int max = 0;
+        int[] arr = new int[m];
+        for(int i=0;i<n;i++){
+
+            for(int j=0;j<m;j++){
+                if(mat[i][j] == '0'){
+                    arr[j]=0;
+                }else{
+                    arr[j]++;
+                }
+
+            }
+            int res = findArea(arr);
+
+            max = Math.max(max,res);
+         //   System.out.println("arr "+Arrays.toString(arr)+" res "+res);
+        }
+        return max;
+
+    }
+
+    int findArea(int[] arr){
+        int n = arr.length;
+        Stack<Integer> st = new Stack<>();
+
+        int[] larr = new int[n];
+        int[] rarr = new int[n];
+
+        for(int ind=0;ind<n;ind++){
+            if(st.isEmpty()){
+                larr[ind]=-1;
+            }
+
+            while(!st.isEmpty() && arr[st.peek()] >= arr[ind]){
+                st.pop();
+
+            }
+
+            if(st.isEmpty()){
+                larr[ind]=-1;
+            }else{
+                larr[ind]=st.peek();
+            }
+            st.push(ind);
+        }
+
+        st = new Stack<>();
+        for(int ind=n-1;ind>=0;ind--){
+            if(st.isEmpty()){
+                rarr[ind]=n;
+            }
+
+            while(!st.isEmpty() && arr[st.peek()] >= arr[ind]){
+                st.pop();
+            }
+
+            if(st.isEmpty()){
+                rarr[ind]=n;
+            }else{
+                rarr[ind]=st.peek();
+            }
+            st.push(ind);
+        }
+
+      //  System.out.println("larr "+Arrays.toString(larr));
+       // System.out.println("rarr "+Arrays.toString(rarr));
+
+        int max = 0;
+        for(int ind=0;ind<n;ind++){
+            max = Math.max(max,arr[ind]*(rarr[ind]-larr[ind]-1));
+        }
+        return max;
+
+
+    }
+}

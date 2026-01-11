@@ -1,0 +1,29 @@
+class Solution {
+    public int centeredSubarrays(int[] arr) {
+        int n = arr.length;
+
+        HashSet<Integer> hm = new HashSet<>();
+
+//        hm.put(0,-1);
+
+        long sum = 0;
+
+        int cnt = 0;
+        for(int ind=0;ind<n;ind++){
+            sum = 0;
+            hm = new HashSet<>();
+            for(int ind1=ind;ind1<n;ind1++){
+                hm.add(arr[ind1]);
+                sum += arr[ind1];
+                if(hm.contains((int)sum)){
+                   cnt += 1; //hm.get((int)sum);
+                }
+            }
+
+           // hm.put(sum,ind)
+        }
+
+        return cnt;
+
+    }
+}

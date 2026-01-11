@@ -1,0 +1,90 @@
+class Solution {
+    public int minDifference(int[] arr, int n) {
+
+        long total = 0;
+        for(int ind=0;ind<n;ind++){
+            total += arr[ind];
+        }
+
+        /*int[][] memo = new int[n+1][(int)(total+1)];
+        for(int i=0;i<=n;i++){
+            for(int j=0;j<=total;j++){
+                memo[i][j] = -1;
+            }
+        }
+
+        return tr(arr,n,total,0,memo);*/
+
+   //     return tr1(arr,n,total);
+
+        return tr2(arr,n,total);
+
+    }
+
+    int tr(int[] arr,int n,long total,long sum,int[][] memo){
+        if(n == 0){
+            return (int)(Math.abs((total-sum)-sum));
+        }
+
+        if(memo[n][(int)sum] !=-1){
+            return memo[n][(int)sum];
+        }
+
+        int left = tr(arr,n-1,total,sum,memo);
+        int right = tr(arr,n-1,total,sum+arr[n-1],memo);
+
+        int res = Math.min(left,right);
+        memo[n][(int)sum] = res;
+        return   res;
+    }
+
+    int tr1(int[] arr,int len,long total){
+        int[][] dp = new int[len+1][(int)(2*total+1)];
+        for(int sum=0;sum<=2*total;sum++){
+       // if(n == 0){
+            dp[0][sum] = (int)(Math.abs((total-sum)-sum));
+        //}
+        }
+
+        for(int n=1;n<=len;n++){
+            for(int sum=(int)total;sum>=0;sum--){
+
+                int left = dp[n-1][sum];
+                int right = dp[n-1][sum + arr[n-1]];
+
+                int res = Math.min(left,right);
+                dp[n][(int)sum] = res;
+            }
+        }
+
+        return dp[len][0];
+    }
+
+    int tr2(int[] arr,int len,long total){
+
+        //int[][] dp = new int[len+1][(int)(2*total+1)];
+
+        int[] prev = new int[(int)(2*total+1)];
+        int[] curr = new int[(int)(2*total+1)];
+
+        for(int sum=0;sum<=2*total;sum++){
+            prev[sum] = (int)(Math.abs((total-sum)-sum));
+        }
+
+        for(int n=1;n<=len;n++){
+            for(int sum=(int)total;sum>=0;sum--){
+
+                int left = prev[sum];
+                int right = prev[sum + arr[n-1]];
+
+                int res = Math.min(left,right);
+                curr[(int)sum] = res;
+            }
+            prev = curr;
+            curr = new int[(int)(2*total+1)];
+        }
+
+        return prev[0];
+    }
+}
+

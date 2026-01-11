@@ -1,0 +1,124 @@
+class Solution {
+    public boolean equalPartition(int n, int[] arr) {
+        long sum = 0;
+        for(int i=0;i<n;i++){
+            sum += arr[i];
+        }
+
+        if(sum%2 != 0){
+            return false;
+        }
+
+        sum = sum/2;
+
+       // Boolean[][] memo = new Boolean[n+1][(int)sum+1];
+
+       // return tr(arr,n,sum,memo);
+
+        //return tr1(arr,n,sum);
+
+        return tr2(arr,n,sum);
+    }
+
+    boolean tr(int[] arr,int n,long sum,Boolean[][] memo){
+
+        if(sum == 0){
+            return true;
+        }
+
+        if(n==1){
+           return (arr[0] == sum);
+        }
+
+        if(memo[n][(int)sum] != null){
+            return memo[n][(int)sum];
+        }
+
+        boolean res1 = tr(arr,n-1,sum,memo);
+        boolean res2 = false;
+        if(arr[n-1] <= sum){
+           res2 = tr(arr,n-1,sum-arr[n-1],memo);
+        }
+
+        memo[n][(int)sum] = res1 || res2;
+        return memo[n][(int)sum];
+
+    }
+
+
+    boolean tr1(int[] arr,int len,long target){
+
+        boolean[][] dp = new boolean[len+1][(int)(target+1)];
+
+        for(int i=0;i<=len;i++){
+            dp[i][0] = true;
+        }
+
+       /* if(sum == 0){
+            return true;
+        }*/
+
+        dp[1][(int)target]=true;
+
+        /*if(n==1){
+           return (arr[0] == sum);
+        }*/
+
+        for(int n=1;n<=len;n++){
+            for(int sum=1;sum<=(int)target;sum++){
+
+                boolean res1 = dp[n-1][sum];
+                boolean res2 = false;
+                if(arr[n-1] <= sum){
+                    res2 = dp[n-1][sum-arr[n-1]];
+                }
+
+                dp[n][(int)sum] = res1 || res2;
+            }
+        }
+
+        return dp[len][(int)target];
+
+    }
+
+    boolean tr2(int[] arr,int len,long target){
+
+        boolean[] prev = new boolean[(int)(target+1)];
+        boolean[] curr = new boolean[(int)(target+1)];
+
+        prev[0]=true;
+      /*  for(int i=0;i<=len;i++){
+            dp[i][0] = true;
+        }*/
+
+       /* if(sum == 0){
+            return true;
+        }*/
+
+        curr[(int)target]=true;
+
+        /*if(n==1){
+           return (arr[0] == sum);
+        }*/
+
+        for(int n=1;n<=len;n++){
+            curr[0]= true;
+            for(int sum=1;sum<=(int)target;sum++){
+
+                boolean res1 = prev[sum];
+                boolean res2 = false;
+                if(arr[n-1] <= sum){
+                    res2 = prev[sum-arr[n-1]];
+                }
+
+                curr[(int)sum] = res1 || res2;
+            }
+            prev = curr;
+            curr = new boolean[(int)(target+1)];
+        }
+
+        return prev[(int)target];
+
+    }
+
+}

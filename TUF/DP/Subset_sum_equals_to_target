@@ -1,0 +1,136 @@
+class Solution {
+    public boolean isSubsetSum(int[] arr, int tar) {
+      int n = arr.length;
+    /*  Boolean[][] memo = new Boolean[n+1][tar+1];
+      return tr(arr,n,tar,memo); */
+
+      //return tr1(arr,n,tar);
+
+      return tr2(arr,n,tar);
+
+    }
+
+    Boolean tr(int[] arr,int n,int tar,Boolean[][] memo){
+        if(tar == 0){
+            return true;
+        }
+        if(n==0){
+            return false;
+        }
+
+        if(memo[n][tar] != null){
+            return memo[n][tar];
+        }
+
+        if(tr(arr,n-1,tar,memo)){
+            memo[n][tar] = true;
+            return true;
+        }
+        if(arr[n-1] <= tar){
+            if(tr(arr,n-1,tar-arr[n-1],memo)){
+                memo[n][tar] = true;
+                return true;
+            }
+        }
+
+        memo[n][tar] = false;
+        return false;
+
+    }
+
+    boolean tr1(int[] arr,int len,int target){
+
+        boolean[][] dp = new boolean[len+1][target+1];
+
+        for(int i=0;i<=len;i++){
+            dp[i][0]=true;
+        }
+
+
+      /*  for(int i=1;i<=target;i++){
+            dp[0][1]=false;
+        }*/
+
+      /*  if(tar == 0){
+            return true;
+        }*/
+      /*  if(n==0){
+            return false;
+        }*/
+
+       for(int n=1;n<=len;n++){
+        for(int tar=1;tar<=target;tar++){
+
+         //   boolean res = false;
+            boolean res1 = dp[n-1][tar];//{
+               // res=false;
+                //dp[n][tar] = true;
+                //break;
+                //return true;
+            //}
+
+            boolean res2 = false;
+            if(arr[n-1] <= tar){
+                if(dp[n-1][tar-arr[n-1]]){
+                    //dp[n][tar] = true;
+                    //break;
+                    res2=true;
+                }
+            }
+
+            dp[n][tar] = res1 || res2;
+
+        }
+       }
+
+      /* for(int i=0;i<=len;i++){
+         System.out.println(Arrays.toString(dp[i]));
+       }*/
+
+       return dp[len][target];
+
+    }
+
+    boolean tr2(int[] arr,int len,int target){
+
+       // boolean[][] dp = new boolean[len+1][target+1];
+
+        boolean[] prev = new boolean[target+1];
+        boolean[] curr = new boolean[target+1];
+
+        prev[0]=true;
+
+    /*    for(int i=0;i<=len;i++){
+            dp[i][0]=true;
+        }*/
+
+
+
+       for(int n=1;n<=len;n++){
+        curr[0]=true;
+        for(int tar=1;tar<=target;tar++){
+
+            boolean res1 = prev[tar];//{
+
+            boolean res2 = false;
+            if(arr[n-1] <= tar){
+                if(prev[tar-arr[n-1]]){
+                    res2=true;
+                }
+            }
+
+            curr[tar] = res1 || res2;
+
+        }
+        prev = curr;
+        curr = new boolean[target+1];
+       }
+
+      /* for(int i=0;i<=len;i++){
+         System.out.println(Arrays.toString(dp[i]));
+       }*/
+
+       return prev[target];
+
+    }
+}
