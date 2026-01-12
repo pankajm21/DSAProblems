@@ -1,0 +1,132 @@
+class Solution {
+ public int countPartitions(int n, int diff, int[] arr) {
+
+        int total = 0;
+        int max = 0;
+
+        for(int ind=0;ind<n;ind++){
+            total += arr[ind];
+            max = Math.max( max, arr[ind]);
+        }
+
+
+       /*
+
+
+        int[][] memo = new int[n+1][total+1];
+
+        for(int ind=0;ind<=n;ind++){
+            for(int ind1=0;ind1<=total;ind1++){
+                memo[ind][ind1]=-1;
+            }
+        }
+
+
+        return tr(arr,n,diff,total,0,memo);*/
+
+        //return tr1(arr,n,diff,total,max);
+
+        return tr2(arr,n,diff,total,max);
+
+    }
+
+    int tr(int[] arr,int n,int diff,int total,int s2,int[][] memo){
+
+        if(n == 0){
+            int s1 = total-s2;
+            if(s1 >= s2 && diff == Math.abs(s1-s2)){
+                return 1;
+            }else{
+                return 0;
+            }
+        }
+
+        if(memo[n][s2] != -1){
+            return memo[n][s2];
+        }
+
+
+        int mod = 1000000007;
+        int cnt = tr(arr,n-1,diff,total,s2,memo)%mod;
+
+        cnt += (tr(arr,n-1,diff,total,s2+arr[n-1],memo)%mod);
+
+        cnt = cnt%mod;
+
+        memo[n][s2] = cnt;
+        return cnt;
+    }
+
+
+    int tr1(int[] arr,int len,int diff,int total,int max){
+        int[][] dp = new int[len+1][total+1+max];
+
+        for(int s2=0;s2<=total+max;s2++){
+
+        //if(n == 0){
+            int s1 = total-s2;
+            if(s1 >= s2 && diff == Math.abs(s1-s2)){
+                dp[0][s2] = 1;
+            }/*else{
+                return 0;
+            }*/
+        //}
+
+        }
+
+        int mod = 1000000007;
+
+        for(int n=1;n<=len;n++){
+            for(int s2=total;s2>=0;s2--){
+
+                int cnt = dp[n-1][s2]%mod;
+                cnt += (dp[n-1][s2+arr[n-1]]%mod);
+                cnt = cnt%mod;
+
+                dp[n][s2] = cnt;
+            }
+        }
+
+        return dp[len][0];
+    }
+
+    int tr2(int[] arr,int len,int diff,int total,int max){
+       // int[][] dp = new int[len+1][total+1+max];
+
+        int[] prev = new int[total+1+max];
+        int[] curr = new int[total+1+max];
+
+        for(int s2=0;s2<=total+max;s2++){
+
+        //if(n == 0){
+            int s1 = total-s2;
+            if(s1 >= s2 && diff == Math.abs(s1-s2)){
+                prev[s2] = 1;
+            }/*else{
+                return 0;
+            }*/
+        //}
+
+        }
+
+        int mod = 1000000007;
+
+        for(int n=1;n<=len;n++){
+            for(int s2=total;s2>=0;s2--){
+
+                int cnt = prev[s2]%mod;
+                cnt += (prev[s2+arr[n-1]]%mod);
+                cnt = cnt%mod;
+
+                curr[s2] = cnt;
+            }
+            prev = curr;
+            curr = new int[total+1+max];
+        }
+
+        return prev[0];
+    }
+
+
+
+}

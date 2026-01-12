@@ -1,0 +1,102 @@
+class Solution {
+    public int count(int[] arr, int n, int amount) {
+
+     /* int[][] memo = new int[n+1][amount+1];
+      for(int ind=0;ind<=n;ind++){
+        for(int ind1=0;ind1<=amount;ind1++){
+            memo[ind][ind1]=-1;
+        }
+      }
+
+      return tr(arr,n,amount,memo); */
+
+      //return tr1(arr,n,amount);
+      return tr2(arr,n,amount);
+    }
+
+    int tr(int[] arr,int n,int amt,int[][]  memo){
+        if(n == 0){
+            if(amt == 0){
+                return 1;
+            }else{
+                return 0;
+            }
+        }
+
+        if(memo[n][amt] != -1){
+            return memo[n][amt];
+        }
+
+        int mod = 1000000007;
+
+        long cnt = tr(arr,n-1,amt,memo);
+        if(arr[n-1] <= amt){
+            cnt += tr(arr,n,amt-arr[n-1],memo);
+        }
+
+        cnt = cnt%mod;
+
+        memo[n][amt] =(int)cnt;
+        return memo[n][amt];
+    }
+
+    int tr1(int[] arr,int len,int amount){
+        int[][] dp = new int[len+1][amount+1];
+        dp[0][0]=1;
+       /* if(n == 0){
+            if(amt == 0){
+                return 1;
+            }else{
+                return 0;
+            }
+        }  */
+
+
+        int mod = 1000000007;
+
+
+        for(int n=1;n<=len;n++){
+            for(int amt=0;amt<=amount;amt++){
+
+                long cnt = dp[n-1][amt];
+                if(arr[n-1] <= amt){
+                    cnt += dp[n][amt-arr[n-1]];
+                }
+
+                cnt = cnt%mod;
+
+                dp[n][amt] =(int)cnt;
+            }
+        }
+
+        return dp[len][amount];
+    }
+
+    int tr2(int[] arr,int len,int amount){
+        int[] prev = new int[amount+1];
+        int[] curr = new int[amount+1];
+
+        prev[0]=1;
+
+        int mod = 1000000007;
+
+
+        for(int n=1;n<=len;n++){
+            for(int amt=0;amt<=amount;amt++){
+
+                long cnt = prev[amt];
+                if(arr[n-1] <= amt){
+                    cnt += curr[amt-arr[n-1]];
+                }
+
+                cnt = cnt%mod;
+
+                curr[amt] =(int)cnt;
+            }
+            prev = curr;
+            curr = new int[amount+1];
+        }
+
+        return prev[amount];
+    }
+}

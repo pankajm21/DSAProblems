@@ -1,0 +1,114 @@
+class Solution {
+    public int targetSum(int n, int target, int[] arr) {
+        long sum = 0;
+        int max = 0;
+        for(int ind=0;ind<n;ind++){
+            sum += arr[ind];
+            max = Math.max(max,arr[ind]);
+        }
+
+      //  int amt = (target+sum)-(target-sum)+1;
+      /*  int[][] memo = new int[n+1][(int)(sum+1)];
+        for(int ind=0;ind<=n;ind++){
+            for(int ind1=0;ind1<=sum;ind1++){
+                memo[ind][ind1]=-1;
+            }
+        }*/
+ //       int min = Math.abs(target-sum);
+
+       // return tr(arr,n,target,sum,0,memo);
+
+       // return tr1(arr,n,target,sum,max);
+
+        return tr2(arr,n,target,sum,max);
+
+    }
+
+    int tr(int[] arr,int n,int target,long sum,long s2,int[][] memo){
+
+        if(n == 0){
+            long s1 = -(sum-s2);
+
+            if(s1+s2  == target){
+                return 1;
+            }else{
+                return 0;
+            }
+        }
+
+        if(memo[n][(int)s2] != -1){
+            return memo[n][(int)s2];
+        }
+
+        int mod = 1000000007;
+
+        int cnt = tr(arr,n-1,target,sum,s2,memo)%mod;
+        cnt += tr(arr,n-1,target,sum,s2+arr[n-1],memo)%mod;
+
+        memo[n][(int)s2] = cnt%mod;
+        return memo[n][(int)s2];
+    }
+
+    int tr1(int[] arr,int len,int target,long sum,int max){
+        int[][] dp = new int[len+1][(int)(sum+max+1)];
+
+
+        int div = (target+(int)sum)/2;
+        if((target+(int)sum) %2 == 0 && div < dp[0].length){
+            dp[0][div] = 1;
+          }  /*if(s1+s2 == target){
+                dp[0][s2] = 1;
+            } */
+            /*if(s1+s2  == target){
+                 1;
+            }else{
+                return 0;
+            }*/
+
+        //}
+
+       // System.out.println("len "+len+" sum "+sum);
+        int mod = 1000000007;
+
+        for(int n=1;n<=len;n++){
+            for(int s2=(int)sum;s2>=0;s2--){
+
+             //   System.out.println("s2 "+s2+" val "+(s2+arr[n-1])+" n "+n);
+                int cnt = dp[n-1][s2]%mod;
+                cnt += dp[n-1][s2+arr[n-1]]%mod;
+
+                dp[n][s2] = cnt%mod;
+            }
+        }
+
+        return dp[len][0];
+    }
+
+    int tr2(int[] arr,int len,int target,long sum,int max){
+        int[] prev = new int[(int)(sum+max+1)];
+        int[] curr = new int[(int)(sum+max+1)];
+
+
+        int div = (target+(int)sum)/2;
+        if((target+(int)sum) %2 == 0 && div < prev.length){
+            prev[div] = 1;
+          }
+
+        int mod = 1000000007;
+
+        for(int n=1;n<=len;n++){
+            for(int s2=(int)sum;s2>=0;s2--){
+
+                int cnt = prev[s2]%mod;
+                cnt += prev[s2+arr[n-1]]%mod;
+
+                curr[s2] = cnt%mod;
+            }
+            prev = curr;
+            curr = new int[(int)(sum+max+1)];
+        }
+
+        return prev[0];
+    }
+}
+

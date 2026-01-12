@@ -1,0 +1,97 @@
+class Solution {
+    public int perfectSum(int[] arr, int sum) {
+        int n = arr.length;
+
+/*        int[][] memo = new int[n+1][sum+1];
+        for(int i=0;i<=n;i++){
+            for(int j=0;j<=sum;j++){
+                memo[i][j] = -1;
+            }
+        }
+
+        return tr(arr,n,sum,memo);*/
+
+       // return tr1(arr,n,sum);
+        return tr2(arr,n,sum);
+    }
+
+    int tr(int[] arr,int n,int sum,int[][] memo){
+        if(n == 0){
+            if(sum == 0){
+                return 1;
+            }else{
+                return 0;
+            }
+        }
+
+        if(memo[n][sum] != -1){
+            return memo[n][sum];
+        }
+
+
+        int cnt = tr(arr,n-1,sum,memo)%1000000007;
+        if(arr[n-1] <= sum){
+           cnt += (tr(arr,n-1,sum-arr[n-1],memo))%1000000007;
+        }
+
+        cnt = cnt%1000000007;
+        memo[n][sum] = cnt;
+        return cnt;
+    }
+
+
+    int tr1(int[] arr,int len,int total){
+        int[][] dp = new int[len+1][total+1];
+
+        dp[0][0]=1;
+       /* if(n == 0){
+            if(sum == 0){
+                return 1;
+            }else{
+                return 0;
+            }
+        }*/
+
+        for(int n=1;n<=len;n++){
+            for(int sum=0;sum<=total;sum++){
+
+                int cnt = dp[n-1][sum]%1000000007;
+                if(arr[n-1] <= sum){
+                    cnt += (dp[n-1][sum-arr[n-1]])%1000000007;
+                }
+
+                cnt = cnt%1000000007;
+                dp[n][sum] = cnt;
+            }
+        }
+
+        return dp[len][total];
+    }
+
+    int tr2(int[] arr,int len,int total){
+        //int[][] dp = new int[len+1][total+1];
+
+        int[] prev = new int[total+1];
+        int[] curr = new int[total+1];
+
+        prev[0]=1;
+
+        for(int n=1;n<=len;n++){
+            for(int sum=0;sum<=total;sum++){
+
+                int cnt = prev[sum]%1000000007;
+                if(arr[n-1] <= sum){
+                    cnt += (prev[sum-arr[n-1]])%1000000007;
+                }
+
+                cnt = cnt%1000000007;
+                curr[sum] = cnt;
+            }
+            prev = curr;
+            curr = new int[total+1];
+        }
+
+        return prev[total];
+    }
+}
+

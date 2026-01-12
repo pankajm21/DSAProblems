@@ -1,0 +1,29 @@
+class Solution {
+    public int minTimeToVisitAllPoints(int[][] mat) {
+        int n = mat.length;
+
+        int cnt = 0;
+        for(int ind=0;ind<n-1;ind++){
+            int x1 = mat[ind][0];
+            int y1 = mat[ind][1];
+            int x2 = mat[ind+1][0];
+            int y2 = mat[ind+1][1];
+            cnt += findTime1(x1,y1,x2,y2);
+        }
+        return cnt;
+
+
+    }
+
+    int findTime1(int x1,int y1,int x2,int y2){
+        int d1 = Math.abs(x1-x2);
+        int d2 = Math.abs(y1-y2);
+
+        int min = Math.min(d1,d2);
+        int max = Math.max(d1,d2);
+
+        return min+(max-min);
+
+    }
+
+}

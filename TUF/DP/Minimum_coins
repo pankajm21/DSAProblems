@@ -1,0 +1,122 @@
+class Solution {
+    public int MinimumCoins(int[] arr, int amt) {
+        int n = arr.length;
+
+        /*int[][] memo = new int[n+1][amt+1];
+        for(int ind=0;ind<=n;ind++){
+            for(int ind1=0;ind1<=amt;ind1++){
+                memo[ind][ind1] = -1;
+            }
+        }
+
+        int res = tr(arr,n,amt,memo);*/
+
+       // int res = tr1(arr,n,amt);
+        int res = tr2(arr,n,amt);
+
+        return res == Integer.MAX_VALUE ? -1 : res;
+    }
+
+    int tr(int[]  arr,int n,int amt,int[][] memo){
+        if(n == 0){
+            if(amt == 0){
+                return 0;
+            }else{
+                return Integer.MAX_VALUE;
+            }
+        }
+
+        if(memo[n][amt] != -1){
+            return memo[n][amt];
+        }
+
+        // not take
+        int min = tr(arr,n-1,amt,memo);
+
+        // take
+        if(arr[n-1] <= amt){
+           int take = tr(arr,n,amt-arr[n-1],memo);
+           if(take != Integer.MAX_VALUE){
+             min = Math.min(min,1+take);
+           }
+
+        }
+
+        memo[n][amt] = min;
+        return min;
+    }
+
+    int tr1(int[]  arr,int len,int amount){
+
+        int[][] dp = new int[len+1][amount+1];
+
+        for(int amt = 1;amt<=amount;amt++){
+            dp[0][amt] = Integer.MAX_VALUE;
+        }
+
+        /*if(n == 0){
+            if(amt == 0){
+                return 0;
+            }else{
+                return Integer.MAX_VALUE;
+            }
+        }*/
+
+
+        for(int n=1;n<=len;n++){
+            for(int amt=0;amt<=amount;amt++){
+
+                // not take
+                int min = dp[n-1][amt];
+
+                // take
+                if(arr[n-1] <= amt){
+                    int take = dp[n][amt-arr[n-1]];
+                    if(take != Integer.MAX_VALUE){
+                        min = Math.min(min,1+take);
+                    }
+                }
+
+                dp[n][amt] = min;
+            }
+        }
+
+        return dp[len][amount];
+    }
+
+    int tr2(int[]  arr,int len,int amount){
+
+        //int[][] dp = new int[len+1][amount+1];
+
+        int[] prev = new int[amount+1];
+        int[] curr = new int[amount+1];
+
+        for(int amt = 1;amt<=amount;amt++){
+            prev[amt] = Integer.MAX_VALUE;
+        }
+
+
+        for(int n=1;n<=len;n++){
+            for(int amt=0;amt<=amount;amt++){
+
+                // not take
+                int min = prev[amt];
+
+                // take
+                if(arr[n-1] <= amt){
+                    int take = curr[amt-arr[n-1]];
+                    if(take != Integer.MAX_VALUE){
+                        min = Math.min(min,1+take);
+                    }
+                }
+
+                curr[amt] = min;
+            }
+            prev = curr;
+            curr = new int[amount+1];
+        }
+
+        return prev[amount];
+    }
+}
+

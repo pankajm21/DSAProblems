@@ -1,0 +1,83 @@
+class Solution {
+    public int knapsack01(int[] wt, int[] val, int n, int W) {
+
+       /* int[][] memo = new int[n+1][W+1];
+        for(int ind=0;ind<=n;ind++){
+            for(int ind1=0;ind1<=W;ind1++){
+                memo[ind][ind1]=-1;
+            }
+        }
+
+        return tr(wt,val,n,W,memo); */
+
+       // return tr1(wt,val,n,W);
+
+        return tr2(wt,val,n,W);
+
+
+    }
+
+    int tr(int[] wt,int[] val,int n,int W,int[][]  memo){
+        if(n==0){
+            return 0;
+        }
+
+        if(memo[n][W] != -1){
+            return memo[n][W];
+        }
+
+        int max = tr(wt,val,n-1,W,memo);
+        if(wt[n-1]<= W){
+            max = Math.max(max,val[n-1] + tr(wt,val,n-1,W-wt[n-1],memo));
+        }
+
+        memo[n][W] = max;
+        return max;
+    }
+
+    int tr1(int[] wt,int[] val,int len,int Weight){
+        int[][] dp = new int[len+1][Weight+1];
+
+       /* if(n==0){
+            return 0;
+        }*/
+
+        for(int n=1;n<=len;n++){
+            for(int W=0;W<=Weight;W++){
+
+                int max = dp[n-1][W];
+                if(wt[n-1]<= W){
+                    max = Math.max(max,val[n-1] + dp[n-1][W-wt[n-1]]);
+                }
+
+                dp[n][W] = max;
+            }
+        }
+
+        return dp[len][Weight];
+    }
+
+    int tr2(int[] wt,int[] val,int len,int Weight){
+        //int[][] dp = new int[len+1][Weight+1];
+
+        int[] prev = new int[Weight+1];
+        int[] curr = new int[Weight+1];
+
+
+        for(int n=1;n<=len;n++){
+            for(int W=0;W<=Weight;W++){
+
+                int max = prev[W];
+                if(wt[n-1]<= W){
+                    max = Math.max(max,val[n-1] + prev[W-wt[n-1]]);
+                }
+
+                curr[W] = max;
+            }
+            prev = curr;
+            curr = new int[Weight+1];
+        }
+
+        return prev[Weight];
+    }
+}
