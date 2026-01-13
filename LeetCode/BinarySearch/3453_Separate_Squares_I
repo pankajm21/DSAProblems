@@ -1,0 +1,94 @@
+class Solution {
+    public double separateSquares(int[][] mat) {
+        int n = mat.length;
+        int m = mat[0].length;
+
+        int miny = Integer.MAX_VALUE;
+        int maxy = Integer.MIN_VALUE;
+
+        for(int ind=0;ind<n;ind++){
+            int x = mat[ind][0];
+            int y = mat[ind][1];
+            int l = mat[ind][2];
+
+
+            miny = Math.min(miny,y);
+            maxy = Math.max(maxy,y+l);
+
+        }
+
+       // System.out.println("miny "+miny+" maxy "+maxy);
+        return findMid(miny,maxy,mat);
+
+
+    }
+
+    double findMid(double l,double r,int[][] mat){
+
+        double res = 0;
+        double minl = l;
+        double maxr = r;
+        double totalArea = findArea(minl,maxr,mat);
+        double halfArea = totalArea/2.0;
+
+        double eps = 1e-6;
+
+        //for(int it=0;it<100 && l<=r;it++){
+        while(r-l > eps){
+            double mid = (l+r)/2.0;
+
+          //  System.out.println("l "+l+" r "+r+" mid "+mid);
+            double down = findArea(minl,mid,mat);
+          //  double up = findArea(mid,maxr,mat);
+
+         //   System.out.println("l "+l+" r "+r+" mid "+mid+" down "+down+" up "+up);
+
+            if(down >= halfArea){
+                res=mid;
+                r=mid;
+            }else{
+                l = mid;
+            }
+
+            /*if(down >= up){
+                res = mid;
+                r = mid;
+            }else{ //if(up > down){
+                l = mid;
+            }//else{
+             //   r = mid;
+            //}
+            */
+        }
+
+        return res;
+
+    }
+
+    double findArea(double a,double b,int[][] mat){
+        int n = mat.length;
+
+
+        double res = 0;
+        for(int ind=0;ind<n;ind++){
+            double x = mat[ind][2];
+
+            double c = mat[ind][1];
+            double d = c+mat[ind][2];
+
+            //System.out.println("a "+a+" b "+b+" c "+c+" d "+d+" x "+x+" ind "+ind);
+            if(a >= d || b<=c){
+                continue;
+            }
+
+            double y = Math.min(b,d) - Math.max(a,c);
+            //System.out.println(" y "+y);
+
+            res  += x*y;
+        }
+
+        return res;
+
+    }
+
+}
