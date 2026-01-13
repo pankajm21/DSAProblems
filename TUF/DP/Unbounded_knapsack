@@ -1,0 +1,80 @@
+class Solution {
+    public int unboundedKnapsack(int[] wArr, int[] arr, int n, int W) {
+
+       /* int[][] memo = new int[n+1][W+1];
+        for(int ind=0;ind<=n;ind++){
+            for(int ind1=0;ind1<=W;ind1++){
+                memo[ind][ind1]=-1;
+            }
+        }
+        return tr(wArr,arr,n,W,memo);  */
+
+       // return tr1(wArr,arr,n,W);
+        return tr2(wArr,arr,n,W);
+    }
+
+    int tr(int[] wArr,int[] arr,int n,int W,int[][] memo){
+        if(n == 0){
+            return 0;
+        }
+
+        if(memo[n][W] != -1){
+            return memo[n][W];
+        }
+
+        int max = tr(wArr,arr,n-1,W,memo);
+        if(wArr[n-1]<=W){
+            max = Math.max(max,arr[n-1] + tr(wArr,arr,n,W-wArr[n-1],memo));
+        }
+
+        memo[n][W] = max;
+        return max;
+
+    }
+
+    int tr1(int[] wArr,int[] arr,int len,int Wt){
+        int[][] dp = new int[len+1][Wt+1];
+
+        /*if(n == 0){
+            return 0;
+        }*/
+
+        for(int n=1;n<=len;n++){
+            for(int W=0;W<=Wt;W++){
+
+                int max = dp[n-1][W];
+                if(wArr[n-1]<=W){
+                    max = Math.max(max,arr[n-1] + dp[n][W-wArr[n-1]]);
+                }
+
+                dp[n][W] = max;
+            }
+        }
+
+        return dp[len][Wt];
+
+    }
+
+    int tr2(int[] wArr,int[] arr,int len,int Wt){
+        int[] prev = new int[Wt+1];
+        int[] curr = new int[Wt+1];
+
+
+        for(int n=1;n<=len;n++){
+            for(int W=0;W<=Wt;W++){
+
+                int max = prev[W];
+                if(wArr[n-1]<=W){
+                    max = Math.max(max,arr[n-1] + curr[W-wArr[n-1]]);
+                }
+
+                curr[W] = max;
+            }
+            prev = curr;
+            curr = new int[Wt+1];
+        }
+
+        return prev[Wt];
+
+    }
+}
