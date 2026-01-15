@@ -1,0 +1,47 @@
+class Solution {
+    public int maximizeSquareHoleArea(int n, int m, int[] hArr, int[] vArr) {
+
+        Arrays.sort(hArr);
+        Arrays.sort(vArr);
+
+        int hmax = 1;
+        int[] hA = new int[hArr.length];
+
+        int vmax = 1;
+        int[] vA = new int[vArr.length];
+
+        for(int ind=0;ind<hArr.length;ind++){
+            int curr = hArr[ind];
+            int cnt = 2;
+            for(int ind1=ind+1;ind1<hArr.length;ind1++){
+                if(curr +1 == hArr[ind1]){
+                    cnt++;
+                    curr = curr +1;
+                }else{
+                    break;
+                }
+            }
+            hmax = Math.max(hmax,cnt);
+            hA[ind] = hmax;
+        }
+
+        for(int ind=0;ind<vArr.length;ind++){
+            int curr = vArr[ind];
+            int cnt = 2;
+            for(int ind1=ind+1;ind1<vArr.length;ind1++){
+                if(curr +1 == vArr[ind1]){
+                    cnt++;
+                    curr = curr +1;
+                }else{
+                    break;
+                }
+            }
+            vmax = Math.max(vmax,cnt);
+            vA[ind] = vmax;
+        }
+
+        int min = Math.min(hmax,vmax);
+        return min*min;
+
+    }
+}
