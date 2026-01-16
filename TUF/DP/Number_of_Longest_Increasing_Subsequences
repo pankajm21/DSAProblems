@@ -1,0 +1,40 @@
+class Solution {
+    public int numberOfLIS(int[] arr) {
+        int n = arr.length;
+
+        int[] dp = new int[n];
+        int[] freq = new int[n];
+        Arrays.fill(freq,1);
+        Arrays.fill(dp,1);
+
+        int max = 1;
+        for(int r=1;r<n;r++){
+            for(int l=0;l<r;l++){
+                if(arr[r] > arr[l]){
+                    if(dp[r] < dp[l]+1){
+                        dp[r] = dp[l] + 1;
+                        freq[r] = freq[l];
+                    }else if(dp[r] == dp[l] + 1){
+                        freq[r] += freq[l];
+                    }
+                }
+            }
+            max = Math.max(max,dp[r]);
+        }
+        //System.out.println("max "+max+" dp "+Arrays.toString(dp));
+
+        int cnt = 0;
+        for(int ind=0;ind<n;ind++){
+            if(max == dp[ind]){
+                cnt += freq[ind];
+            }
+        }
+
+        return cnt;
+
+    }
+}
+
+
+
+

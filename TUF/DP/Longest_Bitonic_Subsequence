@@ -1,0 +1,38 @@
+class Solution {
+    public int LongestBitonicSequence(int[] arr) {
+      int n = arr.length;
+
+      int[] lArr = new int[n];
+      int[] rArr = new int[n];
+
+      Arrays.fill(lArr,1);
+      Arrays.fill(rArr,1);
+
+      for(int r=1;r<n;r++){
+        for(int l=0;l<r;l++){
+            if(arr[r] > arr[l] && lArr[r] < lArr[l] + 1){
+                lArr[r] = lArr[l] + 1;
+            }
+        }
+      }
+
+      for(int r=n-2;r>=0;r--){
+        for(int l=n-1;l>r;l--){
+            if(arr[r] > arr[l] && rArr[r] < rArr[l] + 1){
+                rArr[r] = rArr[l] + 1;
+            }
+        }
+      }
+
+
+      int max = 1;
+      for(int ind=0;ind<n;ind++){
+        max = Math.max(max,lArr[ind]+rArr[ind]-1);
+      }
+
+      return max;
+
+    }
+
+
+}

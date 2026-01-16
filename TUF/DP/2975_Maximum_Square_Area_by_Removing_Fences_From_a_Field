@@ -1,0 +1,74 @@
+class Solution {
+    public int maximizeSquareArea(int m, int n, int[] hArr, int[] vArr) {
+
+        int hlen = hArr.length;
+        int vlen = vArr.length;
+
+        Arrays.sort(hArr);
+        Arrays.sort(vArr);
+
+        TreeSet<Integer> hset = new TreeSet<>();
+
+        int prev = 1;
+        List<Integer> lst = new ArrayList<>();
+        for(int ind=0;ind<hlen;ind++){
+            hset.add(hArr[ind]-prev);
+            lst.add(hArr[ind]-prev);
+            for(int ind1=ind+1;ind1<hlen;ind1++){
+                hset.add(hArr[ind1]-prev);
+                lst.add(hArr[ind1]-prev);
+            }
+            hset.add(m-prev);
+
+            prev = hArr[ind];
+            //System.out.println("")
+        }
+        hset.add(m-prev);
+
+        List<Integer> hlst = new ArrayList<>(hset);
+
+
+
+        TreeSet<Integer> vset = new TreeSet<>();
+
+        prev = 1;
+        for(int ind=0;ind<vlen;ind++){
+            vset.add(vArr[ind]-prev);
+            for(int ind1=ind+1;ind1<vlen;ind1++){
+                vset.add(vArr[ind1]-prev);
+            }
+            vset.add(n-prev);
+            prev = vArr[ind];
+        }
+        vset.add(n-prev);
+
+        List<Integer> vlst = new ArrayList<>(vset);
+
+        if(hlst.size() == 0 || vlst.size()==0){
+            return -1;
+        }
+
+        //System.out.println("hlst "+hlst+" vlst "+vlst);
+
+        int l = hlst.size()-1;
+        int r = vlst.size()-1;
+        while(l>=0 && r>=0){
+           // System.out.println("hlst.get(l) "+hlst.get(l)+" vlst.get(r) "+vlst.get(r)+" l "+l+" r "+r);
+            int a = hlst.get(l).intValue();
+            int b = vlst.get(r).intValue();
+
+            if(a == b){
+                long xlen = hlst.get(l);
+       //         System.out.println("xlen "+xlen+"area "+(xlen*xlen));
+                return (int)((xlen*xlen)%1000000007);
+            }else if(a > b){
+                l--;
+            }else{
+                r--;
+            }
+        }
+
+        return -1;
+
+    }
+}
