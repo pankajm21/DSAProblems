@@ -1,0 +1,178 @@
+class Solution {
+    public int largestMagicSquare(int[][] mat) {
+        int n = mat.length;
+        int m = mat[0].length;
+      //  System.out.println("n "+n+" m "+m);
+
+        long[][] rsum = new long[n][m];
+        long[][] csum = new long[n][m];
+        long[][] dsum = new long[n][m];
+        long[][] antdsum = new long[n][m];
+
+        for(int i=0;i<n;i++){
+
+            for(int j=0;j<m;j++){
+                rsum[i][j] = mat[i][j];
+                if(j>0){
+                    rsum[i][j] +=  rsum[i][j-1];
+                }
+                csum[i][j] = mat[i][j];
+                if(i > 0){
+                    csum[i][j] += csum[i-1][j];
+                }
+                dsum[i][j] = mat[i][j];
+                if(i > 0 && j > 0){
+                    dsum[i][j] += dsum[i-1][j-1];
+                }
+                antdsum[i][j] = mat[i][j];
+                if(i > 0 && j < m-1){
+                    antdsum[i][j] += antdsum[i-1][j+1];
+                }
+            }
+        }
+
+        // System.out.println(" mat ");
+        // printLines(mat);
+        // System.out.println(" rsum ");
+        // printLines(rsum);
+        // System.out.println(" csum ");
+        // printLines(csum);
+        // System.out.println(" dsum ");
+        // printLines(dsum);
+        // System.out.println(" antdsum ");
+        // printLines(antdsum);
+
+
+
+        int min = Math.min(n,m);
+        for(int k = min;k>=2;k--){
+       //     if(k == 3){
+            //    System.out.println("check for k "+k);
+                if(check(rsum,csum,dsum,antdsum,n,m,k)){
+                    return k;
+                }
+         //   }
+
+        }
+
+        return 1;
+    }
+
+    void printLines(int[][] grid){
+        int n = grid.length;
+        for(int i=0;i<n;i++){
+            System.out.println(Arrays.toString(grid[i]));
+        }
+    }
+
+
+    boolean check(long[][] rsum,long[][] csum,long[][] dsum,long[][] antdsum,int n,int m,int k){
+          //  System.out.println("n "+n+" m "+m);
+            k = k-1;
+          //  int i = 1;
+           // int j = 1;
+         //   if(i < n-k && j < m-k){
+
+            // k = 2
+            for(int i=0;i<n-k;i++){
+                for(int j=0;j<m-k;j++){
+                    //if(j+k <m && i+k <n && j-k>=0){
+                      //  System.out.println("i "+i+" j "+j);
+                        long sum = rsum[i][j+k];
+                        if(j>0){
+                            sum -= rsum[i][j-1];
+                        }
+
+                        boolean flag = true;
+
+
+                        for(int z=0;z<=k;z++){
+                            long tsum = rsum[i+z][j+k];
+                            if(j>0){
+                                tsum -= rsum[i+z][j-1];
+                            }
+
+                            //if(i == 0 && j == 24 && k == 24){
+                               // System.out.println("tsum "+tsum+" i "+(i+z)+" j "+j);
+                            //}
+
+                            if(sum != tsum){
+                                flag = false;
+                                break;
+                            }
+                        }
+
+                        if(!flag){
+                            continue;
+                        }
+
+             //           System.out.println(" row sum "+sum);
+
+                       /* long sum2 = csum[i+k][j];
+                        if(i>0){
+                            sum2 -= csum[i-1][j];
+                        }
+
+                        if(sum1 != sum2){
+                            continue;
+                        }*/
+
+                        flag=true;
+
+                        for(int z=0;z<=k;z++){
+                            long tsum = csum[i+k][j+z];
+                            if(i>0){
+                                tsum -= csum[i-1][j+z];
+                            }
+                          //  if(i == 0 && j == 24 && k == 24){
+                             //   System.out.println("tsum "+tsum+" i "+i+" (j+k) "+(j+k));
+                           // }
+                            if(sum != tsum){
+                                flag = false;
+                                break;
+                            }
+                        }
+
+                        if(!flag){
+                            continue;
+                        }
+
+               //         System.out.println(" col sum "+tsum);
+
+
+
+                        long sum3 = dsum[i+k][j+k];
+                        if(i>0 && j>0){
+                            sum3 -= dsum[i-1][j-1];
+                        }
+
+                 //       System.out.println(" diag sum "+tsum);
+
+                        if(sum != sum3){
+                            continue;
+                        }
+
+                        int newj = j+k;
+                        long sum4 = antdsum[i+k][newj-k];
+                        if(i>0 && newj+1<m){
+                            sum4 -= antdsum[i-1][newj+1];
+                        }
+
+                   //     System.out.println(" ant diag sum "+tsum);
+
+                        if(sum == sum4){
+                           // continue;
+                           System.out.println(" verify sum "+sum+" sum3 "+sum3+" sum4 "+sum4+" k "+k+" i "+i+" j "+j);
+
+                           return true;
+                        }
+
+
+                   // }
+                }
+            }
+ //           }
+            return false;
+
+    }
+}

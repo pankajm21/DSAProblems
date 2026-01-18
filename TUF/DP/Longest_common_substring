@@ -1,0 +1,49 @@
+class Solution {
+    int max=0;
+    public int longestCommonSubstr(String s1, String s2) {
+        int n1 = s1.length();
+        int n2 = s2.length();
+
+       // tr(s1,s2,0,0,0);
+       // return max;
+
+        return tr1(s1,s2,n1,n2);
+    }
+
+    void tr(String s1,String s2,int pos1,int pos2,int cnt){
+        if(pos1 == s1.length() || pos2 == s2.length()){
+            max = Math.max(max,cnt);
+            return;
+        }
+
+        max = Math.max(max,cnt);
+
+        tr(s1,s2,pos1+1,pos2,0);
+        tr(s1,s2,pos1,pos2+1,0);
+        if(s1.charAt(pos1) == s2.charAt(pos2)){
+            tr(s1,s2,pos1+1,pos2+1,cnt+1);
+        }
+
+    }
+
+    int tr1(String s1,String s2,int n1,int n2){
+
+        int[][] dp = new int[n1][n2];
+
+        int max = 0;
+        for(int i=0;i<n1;i++){
+            for(int j=0;j<n2;j++){
+                if(s1.charAt(i) == s2.charAt(j)){
+                    dp[i][j] = 1;
+                    if(i > 0 && j > 0){
+                        dp[i][j] += dp[i-1][j-1];
+
+                    }
+                    max = Math.max(max,dp[i][j]);
+                }
+            }
+        }
+
+        return max;
+    }
+}

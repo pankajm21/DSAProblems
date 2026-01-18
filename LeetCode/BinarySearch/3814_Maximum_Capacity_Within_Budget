@@ -1,0 +1,75 @@
+class Solution {
+    public int maxCapacity(int[] arr1, int[] arr2, int bud) {
+        int n = arr1.length;
+        Pair[] pArr = new Pair[n];
+
+        for(int ind=0;ind<n;ind++){
+            pArr[ind] = new Pair(arr1[ind],arr2[ind]);
+        }
+
+        Arrays.sort(pArr,(p1,p2) -> p1.a - p2.a);
+
+       // System.out.println("pArr "+Arrays.toString(pArr));
+
+        int[] maxArr = new int[n];
+        maxArr[0] = pArr[0].b;
+        for(int ind=1;ind<n;ind++){
+            maxArr[ind] = Math.max(maxArr[ind-1],pArr[ind].b);
+        }
+
+       // System.out.println("maxArr "+Arrays.toString(maxArr));
+
+        int max = 0;
+        for(int ind=0;ind<n;ind++){
+            if(pArr[ind].a >= bud){
+                break;
+            }
+            max = Math.max(max,pArr[ind].b);
+            if(ind == 0){
+                continue;
+            }
+            int val = bud-pArr[ind].a;
+            int lb = findInd(0,ind-1,pArr,val);
+            if(lb == -1){
+                continue;
+            }
+           // System.out.println(" val "+val+" lb "+lb+" ind "+ind);
+
+            max = Math.max(max,pArr[ind].b+maxArr[lb]);
+          //  System.out.println(" max "+max+" ind "+ind);
+        }
+
+        return max;
+    }
+
+    int findInd(int l,int r,Pair[] pArr,int x){
+
+        int res = -1;
+        while(l <= r){
+            int mid = (l+r)/2;
+            if(pArr[mid].a < x){
+                res = mid;
+                l = mid+1;
+            }else{
+                r = mid-1;
+            }
+
+        }
+
+        return res;
+    }
+}
+
+class Pair{
+    int a;
+    int b;
+
+    Pair(int a,int b){
+        this.a = a;
+        this.b = b;
+    }
+
+    public String toString(){
+        return " [  a "+a+" b "+b+" ] ";
+    }
+}

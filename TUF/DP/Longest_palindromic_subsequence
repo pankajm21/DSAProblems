@@ -1,0 +1,93 @@
+class Solution {
+    public int longestPalinSubseq(String s) {
+      int n = s.length();
+      StringBuilder sb = new StringBuilder(s);
+      String s2 = sb.reverse().toString();
+
+     /* int[][] memo = new int[n+1][n+1];
+      for(int ind=0;ind<n;ind++){
+        for(int ind1=0;ind1<n;ind1++){
+            memo[ind][ind1]=-1;
+        }
+      }
+
+      return tr(s,s2,n,n,memo);*/
+
+     // return tr1(s,s2,n,n);
+
+      return tr2(s,s2,n,n);
+
+
+    }
+
+    int tr(String s1,String s2,int n1,int n2,int[][] memo){
+        if(n1 == 0 || n2 == 0){
+            return 0;
+        }
+
+        if(memo[n1-1][n2-1] != -1){
+            return memo[n1-1][n2-1];
+        }
+
+        int max = tr(s1,s2,n1-1,n2,memo);
+        max = Math.max(max,tr(s1,s2,n1,n2-1,memo));
+        if(s1.charAt(n1-1) == s2.charAt(n2-1)){
+           max = Math.max(max,1 + tr(s1,s2,n1-1,n2-1,memo));
+        }
+
+        memo[n1-1][n2-1] = max;
+        return max;
+
+    }
+
+    int tr1(String s1,String s2,int len1,int len2){
+
+        int[][] dp = new int[len1+1][len2+1];
+
+        /*if(n1 == 0 || n2 == 0){
+            return 0;
+        }*/
+
+        for(int n1=1;n1<=len1;n1++){
+            for(int n2=1;n2<=len2;n2++){
+
+                    int max = dp[n1-1][n2];
+                    max = Math.max(max,dp[n1][n2-1]);
+                    if(s1.charAt(n1-1) == s2.charAt(n2-1)){
+                        max = Math.max(max,1 + dp[n1-1][n2-1]);
+                    }
+
+                    dp[n1][n2] = max;
+            }
+        }
+
+        return dp[len1][len2];
+
+    }
+
+
+    int tr2(String s1,String s2,int len1,int len2){
+
+       // int[][] dp = new int[len1+1][len2+1];
+        int[] prev = new int[len2+1];
+        int[] curr = new int[len2+1];
+
+        for(int n1=1;n1<=len1;n1++){
+            for(int n2=1;n2<=len2;n2++){
+
+                    int max = prev[n2];
+                    max = Math.max(max,curr[n2-1]);
+                    if(s1.charAt(n1-1) == s2.charAt(n2-1)){
+                        max = Math.max(max,1 + prev[n2-1]);
+                    }
+
+                    curr[n2] = max;
+            }
+            prev = curr;
+            curr = new int[len2+1];
+        }
+
+        return prev[len2];
+
+    }
+}
