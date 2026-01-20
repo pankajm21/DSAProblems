@@ -1,0 +1,281 @@
+class Solution {
+    public double separateSquares(int[][] mat) {
+    int n = mat.length;
+        int m = mat[0].length;
+
+        int miny = Integer.MAX_VALUE;
+        int maxy = Integer.MIN_VALUE;
+
+
+        for(int ind=0;ind<n;ind++){
+            int x = mat[ind][0];
+            int y = mat[ind][1];
+            int l = mat[ind][2];
+
+
+            miny = Math.min(miny,y);
+            maxy = Math.max(maxy,y+l);
+
+        }
+
+       // System.out.println("miny "+miny+" maxy "+maxy);
+        return findMid(miny,maxy,mat);
+
+
+    }
+
+    double findMid(double l,double r,int[][] mat){
+
+        double res = 0;
+        double minl = l;
+        double maxr = r;
+        double totalArea = findArea(minl,maxr,mat);
+        double halfArea = totalArea/2.0;
+
+        System.out.println("l "+l+" r "+r+" totalArea "+totalArea+" halfArea "+halfArea);
+
+        double halfPoint =findHalfPoint(mat,halfArea);
+
+        return halfPoint;
+
+    }
+
+    double findHalfPoint(int[][] mat,double area){
+        int n = mat.length;
+        double res = 0;
+
+        List<Pair> plst = new ArrayList<>();
+
+        TreeSet<Integer> hs = new TreeSet<>();
+        for(int ind=0;ind<n;ind++){
+            int x1 = mat[ind][0];
+            int x2 = x1+mat[ind][2];
+
+            double y1 = mat[ind][1];
+            double y2 = y1+mat[ind][2];
+
+            plst.add(new Pair(y1,x1,x2,+1));
+            plst.add(new Pair(y2,x1,x2,-1));
+            hs.add(x1);
+            hs.add(x2);
+        }
+
+        Collections.sort(plst);
+
+        int[] xArr = new int[hs.size()];
+        HashMap<Integer,Integer> hm = new HashMap<>();
+        int cnt = 0;
+        for(int ele: hs){
+            xArr[cnt] = ele;
+            hm.put(ele,cnt);
+            cnt++;
+        }
+
+        double prevY = plst.get(0).y;
+
+        SegmentTree seg = new SegmentTree(xArr);
+        for(Pair pair: plst){
+            double currY = pair.y;
+
+            double h  = currY-prevY;
+
+            double w = seg.findLength();
+
+            double slice = h*w;
+         //   System.out.println("pair "+pair+" h "+h+" w "+" slice "+slice+" res "+res+" tree "+tree);
+            if(res + slice >= area){
+                double remain = area-res;
+                return prevY + (remain/w);
+            }
+
+            res += slice;
+
+            seg.update(0,0,xArr.length-1,hm.get(pair.x1),hm.get(pair.x2)-1,pair.type);
+            prevY = currY;
+        }
+
+        return prevY;
+
+    }
+
+    double findArea(double yl,double yr,int[][] mat){
+        int n = mat.length;
+        double res = 0;
+        List<Pair> plst = new ArrayList<>();
+
+        TreeSet<Integer> hs = new TreeSet<>();
+        for(int ind=0;ind<n;ind++){
+            int x1 = mat[ind][0];
+            int x2 = x1+mat[ind][2];
+
+            double y1 = mat[ind][1];
+            double y2 = y1+mat[ind][2];
+            y2 = Math.min(y2,yr);
+
+            if(y1 >= y2){
+                continue;
+            }
+
+            plst.add(new Pair(y1,x1,x2,+1));
+            plst.add(new Pair(y2,x1,x2,-1));
+            hs.add(x1);
+            hs.add(x2);
+
+        }
+
+        Collections.sort(plst);
+
+     //   System.out.println("hs "+hs);
+
+        int[] xArr = new int[hs.size()];
+        HashMap<Integer,Integer> hm = new HashMap<>();
+
+        int cnt = 0;
+        for(int ele: hs){
+            xArr[cnt] = ele;
+            hm.put(ele,cnt);
+            cnt++;
+        }
+
+     //   System.out.println("xArr "+Arrays.toString(xArr)+" hm "+hm);
+        //System.out.println("After sorting "+plst+" xmin "+xmin+" xmax "+xmax);
+
+        SegmentTree seg = new SegmentTree(xArr);
+
+        double prevY = plst.get(0).y;
+        for(Pair pair: plst){
+            double currY = pair.y;
+            double h  = currY-prevY;
+
+            double w = seg.findLength();
+
+            double area = h*w;
+           // System.out.println("pair "+pair+" h "+h+" w "+w+" area "+area);
+            res += area;
+
+
+            seg.update(0,0,xArr.length-1,hm.get(pair.x1),hm.get(pair.x2)-1,pair.type);
+            //seg.printArr();
+
+            prevY = currY;
+        }
+
+
+
+        return res;
+
+    }
+
+}
+
+class Pair implements Comparable<Pair>{
+    double y;
+    int x1;
+    int x2;
+    int type;
+
+    Pair(double y,int x1,int x2,int type){
+        this.y = y;
+        this.x1 = x1;
+        this.x2 = x2;
+        this.type = type;
+    }
+
+    public int compareTo(Pair pair){
+        return Double.compare(this.y, pair.y);
+    }
+
+    public String toString(){
+        return " [ y : "+y+" x1 : "+x1+" x2 : "+x2+"  type: "+type+" ] ";
+    }
+}
+
+class SegmentTree{
+    int[] sum;
+//    int[] actual;
+    int n;
+    int[] xArr;
+    int[] count;
+
+    SegmentTree(int[] xArr){
+        this.xArr = xArr;
+        this.n = this.xArr.length-1;
+        this.sum = new int[4*n];
+        this.count = new int[4*n];
+  //      this.actual = new int[4*n];
+    }
+
+    /*void update(int idx,int low,int high,int l,int r,int val){
+        //System.out.println("low "+low+" high "+high+" l "+l+" r "+r);
+        //double eps = 1e-6;
+        if(high<l || low>r){
+            return;
+        }
+
+        if(low == high){
+          //  int len = 0;
+            //if(low != xArr.length -1){
+            int    len = val*(xArr[low+1]-xArr[low]);
+            //}
+
+            actual[idx] += len;
+            if(actual[idx] > 0){
+                sum[idx] = Math.abs(len);
+            }else{
+                sum[idx] = 0;
+            }
+            return;
+        }
+
+
+        int mid = (low+high)/2;
+        update(2*idx+1,low,mid,l,r,val);
+        update(2*idx+2,mid+1,high,l,r,val);
+
+        sum[idx] = sum[2*idx+1] + sum[2*idx+2];
+        actual[idx] = actual[2*idx+1] + actual[2*idx+2];
+
+    }*/
+
+    void update(int idx,int low,int high,int l,int r,int val){
+      //  System.out.println("low "+low+" high "+high+" l "+l+" r "+r);
+        //double eps = 1e-6;
+        if(high<l || low>r){
+            return;
+        }
+
+        if(l<= low && r >= high){
+            count[idx] += val;
+        }else{
+            int mid = (low+high)/2;
+            update(2*idx+1,low,mid,l,r,val);
+            update(2*idx+2,mid+1,high,l,r,val);
+        }
+
+        if(count[idx] > 0){
+          //  System.out.println("high "+high+" low "+low+" xArr "+Arrays.toString(xArr));
+            sum[idx] = xArr[high+1]-xArr[low];
+
+        }else{
+            if(low == high){
+                sum[idx] = 0;
+            }else{
+                sum[idx] = sum[2*idx+1] + sum[2*idx+2];
+            }
+        }
+       // sum[idx] = sum[2*idx+1] + sum[2*idx+2];
+        //actual[idx] = actual[2*idx+1] + actual[2*idx+2];
+
+    }
+
+    void printArr(){
+        System.out.println("sum "+Arrays.toString(sum));
+        //System.out.println("actual "+Arrays.toString(actual));
+    }
+
+    int findLength(){
+        return this.sum[0];
+    }
+
+
+}
