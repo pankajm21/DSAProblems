@@ -1,0 +1,12 @@
+class Solution {
+    public int linearSearch(int arr[], int x) {
+		//Your code goes here
+      int n = arr.length;
+      for(int ind=0;ind<n;ind++){
+        if(arr[ind] == x){
+          return ind;
+        }
+      }
+      return -1;
+    }
+}
