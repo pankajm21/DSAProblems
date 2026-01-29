@@ -1,0 +1,12 @@
+class Solution {
+    public int largestElement(int[] arr) {
+        int n = arr.length;
+
+        int max = Integer.MIN_VALUE;
+        for(int ind=0;ind<n;ind++){
+            max = Math.max(max,arr[ind]);
+        }
+
+        return max;
+    }
+}
