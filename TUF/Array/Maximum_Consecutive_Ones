@@ -1,0 +1,18 @@
+class Solution {
+    public int findMaxConsecutiveOnes(int[] arr) {
+        int n = arr.length;
+        int cnt = 0;
+        int max = 0;
+
+        for(int ind=0;ind<n;ind++){
+            if(arr[ind] == 1){
+                cnt++;
+            }else{
+                cnt = 0;
+            }
+            max = Math.max(max,cnt);
+        }
+
+        return max;
+    }
+}
