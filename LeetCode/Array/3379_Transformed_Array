@@ -1,0 +1,20 @@
+class Solution {
+    public int[] constructTransformedArray(int[] arr) {
+        int n = arr.length;
+
+        int[] res = new int[n];
+
+        for(int ind=0;ind<n;ind++){
+            if(arr[ind] > 0){
+                res[ind]  = arr[(ind+arr[ind])%n];
+            }else if(arr[ind] < 0){
+                int val = Math.abs(arr[ind])%n;
+                res[ind] = arr[(ind-val+n)%n];
+            }else{
+                res[ind] = 0;
+            }
+        }
+
+        return res;
+    }
+}

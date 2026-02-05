@@ -1,0 +1,33 @@
+class Solution {
+    public int numProvinces(int[][] mat) {
+        int V = mat.length;
+
+        boolean[] visitArr = new boolean[V];
+
+        int cnt = 0;
+        for(int i=0;i<V;i++){
+            if(!visitArr[i]){
+                visitArr[i]=true;
+                cnt++;
+                tr(mat,i,V,visitArr);
+            }
+        }
+
+        return cnt;
+
+    }
+
+    void tr(int[][] mat,int u,int n,boolean[] visitArr){
+
+        for(int j=0;j<n;j++){
+            if(!visitArr[j] && mat[u][j] == 1){
+                visitArr[j]=true;
+                tr(mat,j,n,visitArr);
+            }
+        }
+
+
+
+    }
+}
+
