@@ -1,0 +1,75 @@
+class Solution {
+    public int numIslands(char[][] mat) {
+       int n = mat.length;
+       int m = mat[0].length;
+       boolean[][] visitArr = new boolean[n][m];
+
+       int cnt = 0;
+
+       for(int i=0;i<n;i++){
+         for(int j=0;j<m;j++){
+            if(mat[i][j] == '1' && !visitArr[i][j]){
+                visitArr[i][j]=true;
+                cnt++;
+             //   tr(mat,n,m,i,j,visitArr);
+                tr1(mat,n,m,i,j,visitArr);
+
+            }
+         }
+       }
+
+       return cnt;
+
+    }
+
+    void tr(char[][] mat,int n,int m,int r,int c,boolean[][] visitArr){
+
+        int[][] dir = {{0,1},{0,-1},{1,0},{-1,0},{-1,-1},{-1,1},{1,-1},{1,1}};
+
+        for(int ind=0;ind<dir.length;ind++){
+            int newr = r + dir[ind][0];
+            int newc = c + dir[ind][1];
+
+
+            if(newr >=0 && newr <n && newc >=0 && newc <m && mat[newr][newc] == '1' && !visitArr[newr][newc]){
+                visitArr[newr][newc] = true;
+                tr(mat,n,m,newr,newc,visitArr);
+            }
+
+        }
+
+    }
+
+    void tr1(char[][] mat,int n,int m,int r,int c,boolean[][] visitArr){
+
+        Queue<int[]> qu = new LinkedList<>();
+        qu.add(new int[]{r,c});
+
+
+        int[][] dir = {{0,1},{0,-1},{1,0},{-1,0},{-1,-1},{-1,1},{1,-1},{1,1}};
+
+
+        while(!qu.isEmpty()){
+
+            int[] temp = qu.remove();
+            r = temp[0];
+            c = temp[1];
+
+            for(int ind=0;ind<dir.length;ind++){
+
+
+                int newr = r + dir[ind][0];
+                int newc = c + dir[ind][1];
+
+
+                if(newr >=0 && newr <n && newc >=0 && newc <m && mat[newr][newc] == '1' && !visitArr[newr][newc]){
+                    visitArr[newr][newc] = true;
+                    qu.add(new int[]{newr,newc});
+                }
+
+            }
+        }
+
+    }
+}
+

@@ -1,0 +1,48 @@
+class Solution {
+    public int minRemoval(int[] arr, int k) {
+        int n = arr.length;
+
+        Arrays.sort(arr);
+
+        long[] vArr = new long[n];
+        for(int ind=0;ind<n;ind++){
+            vArr[ind] = (long)arr[ind] * k;
+        }
+
+        int min = n;
+        for(int ind=0;ind<n;ind++){
+            int l = ind;
+            int r = findInd(arr,n,vArr[ind]);
+
+            min = Math.min(min, n - (r-l+1));
+        }
+
+       // System.out.println("arr[n-1] "+arr[n-1]+" vArr[n-1] "+vArr[n-1]);
+
+        return min;
+
+    }
+
+    int findInd(int[] arr,int n,long x){
+
+        int l = 0;
+        int r = n-1;
+
+        int res = -1;
+        while(l <= r){
+
+            int mid = (l+r)/2;
+            if(x >= (long)arr[mid]){
+                res = mid;
+                l = mid+1;
+            }else{
+                r = mid-1;
+            }
+
+
+        }
+
+
+        return res;
+    }
+}
