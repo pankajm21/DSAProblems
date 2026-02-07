@@ -1,0 +1,45 @@
+class Solution {
+    public int[][] floodFill(int[][] mat, int r, int c, int newCol) {
+
+        int n = mat.length;
+        int m = mat[0].length;
+
+        int col = mat[r][c];
+        /*if(mat[r][c] == 0){
+            return mat;
+        }*/
+
+        boolean[][] visitArr = new boolean[n][m];
+        visitArr[r][c] = true;
+
+        Queue<int[]> qu = new LinkedList<>();
+        mat[r][c] = newCol;
+        visitArr[r][c]=true;
+        qu.add(new int[]{r,c});
+
+        while(!qu.isEmpty()){
+            int[] temp = qu.remove();
+
+            r = temp[0];
+            c = temp[1];
+
+            int[][] dir = {{0,1},{0,-1},{1,0},{-1,0}};
+
+            for(int ind=0;ind<dir.length;ind++){
+                int new_r = r + dir[ind][0];
+                int new_c = c + dir[ind][1];
+
+                if(new_r >=0 && new_r < n && new_c >=0 && new_c < m && mat[new_r][new_c] == col && !visitArr[new_r][new_c]){
+                    visitArr[r][c] = true;
+                    mat[new_r][new_c] = newCol;
+                    qu.add(new int[]{new_r,new_c});
+                }
+            }
+
+        }
+
+        return mat;
+    }
+
+
+}
