@@ -1,0 +1,49 @@
+class Solution {
+    public int orangesRotting(int[][] mat) {
+        int n = mat.length;
+        int m = mat[0].length;
+
+        Queue<int[]> qu = new LinkedList<>();
+
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(mat[i][j] == 2){
+                    qu.add(new int[]{i,j,0});
+                }
+            }
+        }
+
+        int time = 0;
+        while(!qu.isEmpty()){
+           int[] temp = qu.remove();
+           time = temp[2];
+           int[][] dir = {{0,1},{0,-1},{1,0},{-1,0}};
+
+           for(int ind=0;ind<dir.length;ind++){
+            int new_r = temp[0] + dir[ind][0];
+            int new_c = temp[1] + dir[ind][1];
+
+            if(new_r >=0 && new_r < n && new_c >=0 && new_c < m && mat[new_r][new_c] == 1){
+                mat[new_r][new_c] = 2;
+                qu.add(new int[]{new_r,new_c,temp[2]+1});
+            }
+
+           }
+
+
+        }
+
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(mat[i][j] == 1){
+                    return -1;
+                }
+            }
+        }
+
+
+        return time;
+    }
+}
+
+
