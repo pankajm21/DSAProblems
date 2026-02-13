@@ -1,0 +1,62 @@
+class Solution {
+    public char[][] fill(char[][] mat) {
+        int n = mat.length;
+        int m = mat[0].length;
+
+
+        boolean[][] visitArr = new boolean[n][m];
+
+        Queue<int[]> qu = new LinkedList<>();
+
+        for(int j=0;j<m;j++){
+            if(!visitArr[0][j] && mat[0][j] == 'O'){
+                visitArr[0][j]=true;
+                qu.add(new int[]{0,j});
+            }
+            if(!visitArr[n-1][j] && mat[n-1][j] == 'O'){
+                visitArr[n-1][j]=true;
+                qu.add(new int[]{n-1,j});
+            }
+        }
+
+        for(int i=0;i<n;i++){
+            if(!visitArr[i][0] && mat[i][0] == 'O'){
+                visitArr[i][0]=true;
+                qu.add(new int[]{i,0});
+            }
+            if(!visitArr[i][m-1] && mat[i][m-1] == 'O'){
+                visitArr[i][m-1]=true;
+                qu.add(new int[]{i,m-1});
+            }
+        }
+
+        while(!qu.isEmpty()){
+           int[] temp = qu.remove();
+           int r = temp[0];
+           int c = temp[1];
+
+           int[][] dir = {{0,1},{0,-1},{1,0},{-1,0}};
+
+           for(int ind=0;ind<dir.length;ind++){
+            int new_r = r+dir[ind][0];
+            int new_c = c+dir[ind][1];
+
+            if(new_r >=0 && new_r < n && new_c >=0 && new_c < m && !visitArr[new_r][new_c] && mat[new_r][new_c] == 'O'){
+                visitArr[new_r][new_c]=true;
+                qu.add(new int[]{new_r,new_c});
+            }
+
+           }
+        }
+
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(!visitArr[i][j] && mat[i][j] == 'O'){
+                    mat[i][j]='X';
+                }
+            }
+        }
+
+        return mat;
+    }
+}
