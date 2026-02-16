@@ -1,0 +1,64 @@
+class Solution {
+    public boolean isCycle(int V, List<Integer>[] adj) {
+
+        boolean[] visitArr = new boolean[V];
+        for(int ind=0;ind<V;ind++){
+            if(!visitArr[ind]){
+                visitArr[ind]=true;
+               /* if(bfs(adj,ind,visitArr)){
+                    return true;
+                }*/
+                if(tr(adj,ind,visitArr,-1)){
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    boolean tr(List<Integer>[] adj,int u,boolean[] visitArr,int par){
+
+        for(int v : adj[u]){
+            if(par == v){
+                continue;
+            }
+            if(visitArr[v]){
+                return true;
+            }
+            visitArr[v]=true;
+            if(tr(adj,v,visitArr,u)){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    boolean bfs(List<Integer>[] adj,int u,boolean[] visitArr){
+        Queue<int[]> qu = new LinkedList<>();
+        qu.add(new int[]{u,-1});
+
+
+        while(!qu.isEmpty()){
+            int[] temp = qu.remove();
+            int ele = temp[0];
+            int par = temp[1];
+
+            for(int v: adj[ele]){
+                if(v == par){
+                    continue;
+                }
+                if(visitArr[v]){
+                    return true;
+                }
+                visitArr[v]=true;
+                qu.add(new int[]{v,ele});
+
+            }
+        }
+
+        return false;
+
+    }
+}
